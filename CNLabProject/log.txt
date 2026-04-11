@@ -1,0 +1,471 @@
+[PROXY STARTED] 127.0.0.1:8080
+[PROXY STARTED] 127.0.0.1:8080
+[PROXY STARTED] 127.0.0.1:8080
+[PROXY STARTED] 127.0.0.1:8080
+[PROXY STARTED] 127.0.0.1:8080
+[HTTPS] 127.0.0.1 -> chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> fonts.googleapis.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> googleads.g.doubleclick.net:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> rr2---sn-hgn7rn7y.googlevideo.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+om
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[HTTPS] 127.0.0.1 -> accounts.google.com:443
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> hianime.to:443
+6.google.com:443
+[HTTPS] 127.0.0.1 -> safebrowsing.google.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+com
+[HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> i.ytimg.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> clients4.google.com:443
+[HTTPS] 127.0.0.1 -> fonts.googleapis.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> rr2---sn-hgn7rn7y.googlevideo.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> hianime.to:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> fonts.googleapis.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[ERROR] [Errno 11001] getaddrinfo failed
+[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[HTTPS] 127.0.0.1 -> ogs.google.com:443
+[HTTPS] 127.0.0.1 -> encrypted-tbn0.gstatic.com:443
+[HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> encrypted-tbn0.gstatic.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[HTTPS ERROR] [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+[HTTPS ERROR] [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[HTTPS] 127.0.0.1 -> safebrowsing.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> encrypted-tbn0.gstatic.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> accounts.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[HTTPS] 127.0.0.1 -> ogs.google.com:443
+[HTTPS] 127.0.0.1 -> leetcode.com:443
+[HTTPS] 127.0.0.1 -> o6871.ingest.sentry.io:443
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> assets.leetcode.com:443
+[HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> www.google-analytics.com:443
+[HTTPS] 127.0.0.1 -> www.googletagmanager.com:443
+[HTTPS] 127.0.0.1 -> api-os.growingio.com:443
+[HTTPS] 127.0.0.1 -> tags.growingio.com:443
+[HTTPS] 127.0.0.1 -> stats.g.doubleclick.net:443
+[HTTPS] 127.0.0.1 -> googleads.g.doubleclick.net:443
+[HTTPS] 127.0.0.1 -> ep1.adtrafficquality.google:443
+[HTTPS] 127.0.0.1 -> analytics.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.co.in:443
+[HTTPS] 127.0.0.1 -> ep2.adtrafficquality.google:443
+[HTTPS] 127.0.0.1 -> fundingchoicesmessages.google.com:443
+[HTTPS] 127.0.0.1 -> api-os.growingio.com:443
+[HTTPS] 127.0.0.1 -> ep2.adtrafficquality.google:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> fw.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> s0.2mdn.net:443
+[HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> fundingchoicesmessages.google.com:443
+[HTTPS] 127.0.0.1 -> s0.2mdn.net:443
+[HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[HTTPS] 127.0.0.1 -> ad.doubleclick.net:443
+[HTTPS] 127.0.0.1 -> hpe.demdex.net:443
+[HTTPS] 127.0.0.1 -> www.googletagservices.com:443
+[HTTPS] 127.0.0.1 -> ad.doubleclick.net:443
+[HTTPS] 127.0.0.1 -> ep1.adtrafficquality.google:443
+[HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> ep1.adtrafficquality.google:443
+[HTTPS] 127.0.0.1 -> jsconfig.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> clients4.google.com:443
+[HTTPS] 127.0.0.1 -> dt.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> jsconfig.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> dt.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> dt.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> dt.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> dt.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> dt.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> static.adsafeprotected.com:443
+[HTTPS] 127.0.0.1 -> analytics.google.com:443
+[HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[HTTPS] 127.0.0.1 -> ade.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> o6871.ingest.sentry.io:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+n.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> clients4.google.com:443
+.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ogs.google.com:443
+[HTTP] 127.0.0.1 -> ipv6.msftncsi.com
+[ERROR] [Errno 11001] getaddrinfo failed
+[PROXY STARTED] 127.0.0.1:8080
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> chatgpt.com:443
+[PROXY STARTED] 127.0.0.1:8080
+[HTTPS] 127.0.0.1 -> chatgpt.com:443
+[HTTPS] 127.0.0.1 -> assets.msn.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> browser.events.data.microsoft.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[HTTPS] 127.0.0.1 -> encrypted-tbn0.gstatic.com:443
+[HTTPS] 127.0.0.1 -> ogs.google.com:443
+[HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[HTTPS] 127.0.0.1 -> clients4.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[PROXY STARTED] 127.0.0.1:8080
+[PROXY STARTED] 127.0.0.1:8080
+[HTTPS] 127.0.0.1 -> www.facebook.com:443
+[HTTPS] 127.0.0.1 -> static.xx.fbcdn.net:443
+[HTTPS] 127.0.0.1 -> www.gstatic.com:443
+[HTTPS] 127.0.0.1 -> content-autofill.googleapis.com:443
+[HTTPS] 127.0.0.1 -> translate.googleapis.com:443
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> static.xx.fbcdn.net:443
+[HTTPS] 127.0.0.1 -> www.instagram.com:443
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> accounts.meta.com:443
+[HTTPS] 127.0.0.1 -> clients4.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[HTTPS] 127.0.0.1 -> encrypted-tbn0.gstatic.com:443
+[HTTPS] 127.0.0.1 -> ogs.google.com:443
+[HTTPS] 127.0.0.1 -> chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ws.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTPS] 127.0.0.1 -> chatgpt.com:443
+[PROXY STARTED] 127.0.0.1:8080
+[HTTPS] 127.0.0.1 -> chatgpt.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> www.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.google.com:443
+[HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[HTTPS] 127.0.0.1 -> play.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[HTTPS] 127.0.0.1 -> clients4.google.com:443
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[ERROR] [Errno 11001] getaddrinfo failed
+[HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:08:49] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-11 18:08:53] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-11 18:08:53] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-11 18:08:53] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-11 18:08:53] [HTTPS] 127.0.0.1 -> safebrowsing.google.com:443
+[2026-04-11 18:08:53] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-11 18:08:56] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:08:58] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:08:59] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:09:02] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:09:07] [HTTPS] 127.0.0.1 -> chatgpt.com:443
+[2026-04-11 18:09:07] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-11 18:09:07] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:09:09] [HTTPS] 127.0.0.1 -> browser.events.data.microsoft.com:443
+[2026-04-11 18:09:33] [HTTPS] 127.0.0.1 -> accounts.google.com:443
+[2026-04-11 18:09:38] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:09:48] [HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[2026-04-11 18:09:50] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:09:53] [HTTPS] 127.0.0.1 -> content-autofill.googleapis.com:443
+[2026-04-11 18:09:57] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:10:12] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:10:12] [HTTPS] 127.0.0.1 -> lh3.google.com:443
+[2026-04-11 18:10:12] [HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[2026-04-11 18:10:12] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-11 18:10:13] [HTTPS] 127.0.0.1 -> play.google.com:443
+[2026-04-11 18:10:14] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:10:15] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:10:17] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:17] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:20] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:10:30] [HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[2026-04-11 18:10:30] [HTTPS] 127.0.0.1 -> ipv6.msftconnecttest.com:443
+[2026-04-11 18:10:30] [HTTPS ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:30] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:30] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:31] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:31] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:35] [HTTPS] 127.0.0.1 -> config.edge.skype.com:443
+[2026-04-11 18:10:36] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:36] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:42] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:42] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:43] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:43] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:44] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:44] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:45] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:45] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:45] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:45] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:47] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:47] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:48] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:48] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:51] [HTTPS] 127.0.0.1 -> web.whatsapp.com:443
+[2026-04-11 18:10:53] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:10:53] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:10:56] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:10:57] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:11:02] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:11:10] [HTTPS] 127.0.0.1 -> servedbyadbutler.com:443
+[2026-04-11 18:12:39] [HTTP] 127.0.0.1 -> ipv6.msftncsi.com
+[2026-04-11 18:12:39] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:13:36] [HTTPS] 127.0.0.1 -> browser.events.data.microsoft.com:443
+[2026-04-11 18:14:11] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:14:45] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:14:45] [HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[2026-04-11 18:14:45] [HTTPS] 127.0.0.1 -> safebrowsing.google.com:443
+[2026-04-11 18:14:45] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:14:46] [HTTPS] 127.0.0.1 -> google-ohttp-relay-safebrowsing.fastly-edge.com:443
+[2026-04-11 18:15:09] [HTTPS] 127.0.0.1 -> array623.prod.do.dsp.mp.microsoft.com:443
+[2026-04-11 18:15:09] [HTTPS] 127.0.0.1 -> array603.prod.do.dsp.mp.microsoft.com:443
+[2026-04-11 18:15:09] [HTTPS] 127.0.0.1 -> array603.prod.do.dsp.mp.microsoft.com:443
+[2026-04-11 18:15:10] [HTTPS] 127.0.0.1 -> mobile.events.data.microsoft.com:443
+[2026-04-11 18:15:44] [HTTPS] 127.0.0.1 -> v10.events.data.microsoft.com:443
+[2026-04-11 18:17:26] [HTTPS] 127.0.0.1 -> v10.events.data.microsoft.com:443
+[2026-04-11 18:16:27] [HTTPS] 127.0.0.1 -> v10.events.data.microsoft.com:443
+[2026-04-11 18:15:09] [HTTPS] 127.0.0.1 -> v10.events.data.microsoft.com:443
+[2026-04-11 18:15:11] [HTTPS] 127.0.0.1 -> mrodevicemgr.officeapps.live.com:443
+[2026-04-11 18:15:09] [HTTPS] 127.0.0.1 -> array602.prod.do.dsp.mp.microsoft.com:443
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:33] [HTTPS ERROR] [WinError 10054] An existing connection was forcibly closed by the remote host
+[2026-04-11 18:17:42] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:17:43] [HTTPS] 127.0.0.1 -> lh3.google.com:443
+[2026-04-11 18:17:43] [HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[2026-04-11 18:17:43] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-11 18:17:44] [HTTPS] 127.0.0.1 -> play.google.com:443
+[2026-04-11 18:17:44] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:17:45] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:17:50] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:18:20] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:18:29] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:18:34] [HTTP] 127.0.0.1 -> c.pki.goog
+[2026-04-11 18:20:41] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-11 18:21:25] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-11 18:21:31] [HTTPS] 127.0.0.1 -> a.nel.cloudflare.com:443
+[2026-04-11 18:21:32] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:21:32] [HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[2026-04-11 18:21:44] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:21:47] [PROXY ERROR] [WinError 10038] An operation was attempted on something that is not a socket
+[2026-04-11 18:21:47] [PROXY STOPPED]
+[2026-04-11 18:22:08] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-11 18:22:08] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-11 18:22:08] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-11 18:22:10] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:22:11] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:22:11] [HTTPS] 127.0.0.1 -> lh3.google.com:443
+[2026-04-11 18:22:11] [HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[2026-04-11 18:22:11] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-11 18:22:12] [HTTPS] 127.0.0.1 -> play.google.com:443
+[2026-04-11 18:22:12] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:22:13] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:22:15] [HTTPS] 127.0.0.1 -> array603.prod.do.dsp.mp.microsoft.com:443
+[2026-04-11 18:22:18] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:22:48] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:23:11] [HTTP] 127.0.0.1 -> ipv6.msftconnecttest.com
+[2026-04-11 18:23:11] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:23:48] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:23:50] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:23:50] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:24:37] [HTTPS] 127.0.0.1 -> chatgpt.com:443
+[2026-04-11 18:25:33] [HTTP] 127.0.0.1 -> ipv6.msftncsi.com
+[2026-04-11 18:25:33] [ERROR] [Errno 11001] getaddrinfo failed
+[2026-04-11 18:26:04] [HTTPS] 127.0.0.1 -> array602.prod.do.dsp.mp.microsoft.com:443
+[2026-04-11 18:27:51] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:28:33] [PROXY ERROR] [WinError 10038] An operation was attempted on something that is not a socket
+[2026-04-11 18:28:33] [PROXY STOPPED]
+[2026-04-11 18:34:07] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-11 18:34:59] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-11 18:35:12] [HTTPS] 127.0.0.1 -> chatgpt.com:443
+[2026-04-11 18:35:12] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:35:12] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:35:12] [HTTPS] 127.0.0.1 -> lh3.google.com:443
+[2026-04-11 18:35:12] [HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[2026-04-11 18:35:12] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-11 18:35:13] [HTTPS] 127.0.0.1 -> play.google.com:443
+[2026-04-11 18:35:14] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:35:15] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:35:19] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-11 18:35:21] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-11 18:35:26] [HTTPS] 127.0.0.1 -> leetcode.com:443
+[2026-04-11 18:35:27] [HTTPS] 127.0.0.1 -> o6871.ingest.sentry.io:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> www.googletagmanager.com:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> api-os.growingio.com:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> www.google-analytics.com:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> stats.g.doubleclick.net:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> api-os.growingio.com:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> analytics.google.com:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> www.google.co.in:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> googleads.g.doubleclick.net:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> ep1.adtrafficquality.google:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> fundingchoicesmessages.google.com:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> ep2.adtrafficquality.google:443
+[2026-04-11 18:35:28] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> fundingchoicesmessages.google.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> metrics.getrockerbox.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> s0.2mdn.net:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> ad.doubleclick.net:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> www.googletagservices.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> ad.doubleclick.net:443
+[2026-04-11 18:35:29] [HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> ep1.adtrafficquality.google:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> ad.doubleclick.net:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> fundingchoicesmessages.google.com:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> fundingchoicesmessages.google.com:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> pagead2.googlesyndication.com:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> ep1.adtrafficquality.google:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> analytics.google.com:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> o6871.ingest.sentry.io:443
+[2026-04-11 18:35:30] [HTTPS] 127.0.0.1 -> ade.googlesyndication.com:443
+[2026-04-11 18:35:31] [HTTPS] 127.0.0.1 -> chatgpt.com:443
+[2026-04-11 18:35:31] [HTTPS] 127.0.0.1 -> ab.chatgpt.com:443
+[2026-04-11 18:35:35] [HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[2026-04-11 18:35:35] [HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[2026-04-11 18:35:35] [HTTPS] 127.0.0.1 -> www.googleadservices.com:443
+[2026-04-11 18:35:38] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:35:38] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:35:45] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-11 18:35:48] [PROXY ERROR] [WinError 10038] An operation was attempted on something that is not a socket
+[2026-04-11 18:35:48] [PROXY STOPPED]
+[2026-04-11 18:45:06] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-11 18:45:06] [HTTPS] 127.0.0.1 -> chatgpt.com:443
+[2026-04-11 18:45:22] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-11 18:45:26] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:45:26] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-11 18:45:26] [HTTPS] 127.0.0.1 -> lh3.google.com:443
+[2026-04-11 18:45:26] [HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[2026-04-11 18:45:26] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-11 18:45:27] [HTTPS] 127.0.0.1 -> play.google.com:443
+[2026-04-11 18:45:28] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:45:29] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:45:34] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-11 18:45:39] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:45:39] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-11 18:45:41] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-11 18:45:46] [HTTPS] 127.0.0.1 -> fd.api.iris.microsoft.com:443
+[2026-04-11 18:45:54] [PROXY ERROR] [WinError 10038] An operation was attempted on something that is not a socket
+[2026-04-11 18:45:54] [PROXY STOPPED]
