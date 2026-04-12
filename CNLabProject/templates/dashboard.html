@@ -38,7 +38,7 @@
         <form action="{{ url_for('add_new_rule') }}" method="POST">
             <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-dim);">Domain Name</label>
-                <input type="text" name="domain" placeholder="e.g. facebook.com" style="width: 100%; box-sizing: border-box;" required>
+                <input type="text" name="domain" id="domain_input" placeholder="e.g. facebook.com" style="width: 100%; box-sizing: border-box;" required>
             </div>
             <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-dim);">Category</label>
@@ -51,10 +51,17 @@
             </div>
             <div style="margin-bottom: 20px;">
                 <label style="display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-dim);">Action</label>
-                <select name="action" style="width: 100%;">
-                    <option value="block">Block Always</option>
-                    <option value="allow">Allow Always (Whitelist Override)</option>
+                <select name="action" id="action_select" style="width: 100%;">
+                    <option value="block" {% if mode == 'blacklist' %}selected{% endif %}>Block Always (Blacklist)</option>
+                    <option value="allow" {% if mode == 'whitelist' %}selected{% endif %}>Allow Always (Whitelist Override)</option>
                 </select>
+                <p id="action_hint" style="font-size: 11px; margin-top: 5px; color: var(--primary);">
+                    {% if mode == 'whitelist' %}
+                    Note: In Whitelist mode, you usually want to "Allow Always".
+                    {% else %}
+                    Note: In Blacklist mode, you usually want to "Block Always".
+                    {% endif %}
+                </p>
             </div>
             <button type="submit" style="width: 100%;">Add Safety Rule</button>
         </form>

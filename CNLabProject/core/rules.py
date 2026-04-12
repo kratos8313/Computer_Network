@@ -22,8 +22,8 @@ def should_block(domain):
     mode = mode_row['value'] if mode_row else 'blacklist'
     
     # 2. Check for explicit Domain Rule
-    from utils.norm import normalize_domain
-    domain_lower = normalize_domain(domain)
+    from utils.norm import get_root_domain
+    domain_lower = get_root_domain(domain)
     
     # Root Domain / Subdomain Match
     # We check if the request domain ends with the blocked domain (e.g., m.facebook.com matches facebook.com)

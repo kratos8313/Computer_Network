@@ -78,8 +78,8 @@ def check_password(password):
 
 # --- Rules Helpers ---
 def add_rule(domain, category="Manual", action="block"):
-    from utils.norm import normalize_domain
-    domain = normalize_domain(domain)
+    from utils.norm import get_root_domain
+    domain = get_root_domain(domain)
     if not domain: return
     
     conn = get_db()

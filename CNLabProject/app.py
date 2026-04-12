@@ -51,10 +51,20 @@ def add_new_rule():
     
     domain = request.form.get('domain')
     category = request.form.get('category')
-    action = request.form.get('action', 'block')
+    
+    # Get current mode to set a smart default
+    conn = get_db()
+    mode_row = conn.execute("SELECT value FROM settings WHERE key='mode'").fetchone()
+    conn.close()
+    current_mode = mode_row['value'] if mode_row else 'blacklist'
+    
+    # If in whitelist mode, we assume the user wants to ALLOW the site
+    default_action = 'allow' if current_mode == 'whitelist' else 'block'
+    action = request.form.get('action', default_action)
     
     if domain:
         add_rule(domain, category, action)
+        from core.blocker import block_sites
         block_sites() # Apply immediately
     
     return redirect(url_for('index'))

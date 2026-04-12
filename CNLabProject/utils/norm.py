@@ -22,26 +22,35 @@ def normalize_domain(domain):
     domain = domain.split(':')[0]
     
     # Basic domain validation regex
-    # (Actually we want to keep it simple, but at least remove common invalid chars)
     domain = re.sub(r'[^a-z0-9\.-]', '', domain)
     
+    return domain
+
+def get_root_domain(domain):
+    """
+    Extracts the root domain (e.g., 'www.facebook.com' -> 'facebook.com').
+    Strips common subdomains like www, m, web, etc.
+    """
+    domain = normalize_domain(domain)
+    if not domain:
+        return ""
+    
+    # Common subdomain prefixes to strip
+    prefixes = ['www.', 'm.', 'web.', 'mobile.', 'apps.']
+    for p in prefixes:
+        if domain.startswith(p):
+            return domain[len(p):]
+            
     return domain
 
 def get_domain_variants(domain):
     """
     Returns a list of common variants for a domain to ensure blocking coverage.
-    Example: 'facebook.com' -> ['facebook.com', 'www.facebook.com']
+    Now centered around the root domain.
     """
-    domain = normalize_domain(domain)
-    if not domain:
+    root = get_root_domain(domain)
+    if not root:
         return []
     
-    variants = {domain}
-    
-    # Add www variant
-    if domain.startswith("www."):
-        variants.add(domain[4:])
-    else:
-        variants.add("www." + domain)
-        
-    return list(variants)
+    # We return the root and the www variant to ensure standard hosts-file coverage
+    return [root, f"www.{root}"]
