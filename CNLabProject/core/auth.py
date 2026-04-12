@@ -14,6 +14,7 @@ def setup_password():
             "password": hash_password(pwd),
             "blocked_sites": []
         }
+        os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
         with open(CONFIG_PATH, "w") as f:
             json.dump(data, f)
 

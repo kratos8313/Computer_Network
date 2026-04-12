@@ -1,0 +1,5 @@
+﻿__pycache__/
+*.db
+log.txt
+config/settings.json
+.DS_Store

@@ -1,42 +1,53 @@
 import socket
 import threading
-import json
 from utils.logger import log
+from core.rules import should_block
+from core.database import log_activity
 
 CONFIG_PATH = "config/settings.json"
 
 #Global variables
 server_socket = None
 proxy_running = False
+proxy_status = "STOPPED" # STOPPED, RUNNING, ERROR
+proxy_error = ""
 
 
 # ---------------- CONFIG ----------------
-def load_config():
-    with open(CONFIG_PATH, "r") as f:
-        return json.load(f)
+# Removed load_config JSON dependency
 
 
 # ---------------- DPI ----------------
 def dpi_inspect(data, client_ip):
     text = data.decode("utf-8", "ignore").lower()
-    config = load_config()
-
+    
     host = ""
     for line in text.split("\r\n"):
         if line.startswith("host:"):
             host = line.split(":", 1)[1].strip()
             break
 
-    # Block sites
-    for site in config["blocked_sites"]:
-        if site in host:
-            return "BLOCK", host
+    if not host: 
+        return "ALLOW", ""
 
-    # Keyword detection
+    # Check Rules
+    blocked, reason = should_block(host)
+    
+    # Keyword detection (Keeping existing feature)
     for keyword in ["password", "login"]:
         if keyword in text:
             log(f"[ALERT] Keyword '{keyword}' from {client_ip}")
 
+    # Root keyword search (Extra safety for related CDNs)
+    if not blocked:
+        # Check if the host contains any part of our blocked rules as a root domain
+        pass # should_block already handles LIKE %domain% now
+
+    if blocked:
+        log_activity(host, "BLOCKED", reason)
+        return "BLOCK", host
+    
+    log_activity(host, "ALLOWED")
     return "ALLOW", host
 
 
@@ -80,16 +91,18 @@ def handle_client(client_socket, addr):
             host, port = host_port.split(":")
             port = int(port)
 
-            config = load_config()
+            # Check Rules
+            blocked, reason = should_block(host)
 
-            # Block HTTPS domain
-            if any(site in host for site in config["blocked_sites"]):
+            if blocked:
                 log(f"[BLOCKED HTTPS] {client_ip} -> {host}")
-                client_socket.send(b"HTTP/1.1 403 Forbidden\r\n\r\nBlocked")
+                log_activity(host, "BLOCKED", reason)
+                client_socket.send(b"HTTP/1.1 403 Forbidden\r\n\r\nBlocked by Parent Control")
                 client_socket.close()
                 return
 
             log(f"[HTTPS] {client_ip} -> {host}:{port}")
+            # log_activity(host, "ALLOWED") # Removing to avoid log bloat for every HTTPS tunnel stream
 
             try:
                 remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -143,27 +156,38 @@ def handle_client(client_socket, addr):
 
 # ---------------- START PROXY ----------------
 def start_proxy(host="127.0.0.1", port=8080):
-    global server_socket, proxy_running
-
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((host, port))
-    server_socket.listen(50)
-
-    proxy_running = True
-    log(f"[PROXY STARTED] {host}:{port}")
+    global server_socket, proxy_running, proxy_status, proxy_error
 
     try:
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server_socket.bind((host, port))
+        server_socket.listen(50)
+        
+        proxy_running = True
+        proxy_status = "RUNNING"
+        proxy_error = ""
+        log(f"[PROXY STARTED] {host}:{port}")
+
         while proxy_running:
             client_socket, addr = server_socket.accept()
             threading.Thread(target=handle_client, args=(client_socket, addr), daemon=True).start()
 
     except Exception as e:
+        proxy_status = "ERROR"
+        proxy_error = str(e)
         log(f"[PROXY ERROR] {e}")
 
     finally:
+        proxy_running = False
+        if proxy_status != "ERROR":
+            proxy_status = "STOPPED"
         if server_socket:
             server_socket.close()
         log("[PROXY STOPPED]")
+
+def get_proxy_status():
+    return proxy_status, proxy_error
 
 # ---------------- STOP PROXY ----------------
 def stop_proxy():
