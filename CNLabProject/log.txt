@@ -1,0 +1,65 @@
+[2026-04-12 19:24:11] [PROXY STARTED] 127.0.0.1:8080
+[2026-04-12 19:24:13] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-12 19:24:13] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-12 19:24:13] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-12 19:24:14] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-12 19:24:19] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-12 19:24:20] [HTTPS] 127.0.0.1 -> accounts.google.com:443
+[2026-04-12 19:24:20] [HTTPS] 127.0.0.1 -> oauthaccountmanager.googleapis.com:443
+[2026-04-12 19:24:20] [HTTPS] 127.0.0.1 -> gemini.google.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> safebrowsing.google.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> www.gstatic.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> www.googletagmanager.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> waa-pa.clients6.google.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> www.gstatic.com:443
+[2026-04-12 19:24:21] [HTTPS] 127.0.0.1 -> signaler-pa.clients6.google.com:443
+[2026-04-12 19:24:23] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-12 19:24:23] [BLOCKED HTTPS] 127.0.0.1 -> www.facebook.com
+[2026-04-12 19:24:24] [HTTPS] 127.0.0.1 -> android.clients.google.com:443
+[2026-04-12 19:24:24] [HTTPS] 127.0.0.1 -> www.google.com:443
+[2026-04-12 19:24:24] [HTTPS] 127.0.0.1 -> t0.gstatic.com:443
+[2026-04-12 19:24:24] [HTTPS] 127.0.0.1 -> lh3.google.com:443
+[2026-04-12 19:24:24] [HTTPS] 127.0.0.1 -> ogads-pa.clients6.google.com:443
+[2026-04-12 19:24:24] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-12 19:24:25] [HTTPS] 127.0.0.1 -> play.google.com:443
+[2026-04-12 19:24:26] [HTTPS] 127.0.0.1 -> clients4.google.com:443
+[2026-04-12 19:24:26] [HTTPS] 127.0.0.1 -> encrypted-tbn0.gstatic.com:443
+[2026-04-12 19:24:27] [HTTPS] 127.0.0.1 -> lh3.googleusercontent.com:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> ogs.google.com:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> optimizationguide-pa.googleapis.com:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> rcoem.in:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> www.gstatic.com:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> www.googletagmanager.com:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> ssl.google-analytics.com:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> rcoem.in:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> rcoem.in:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> rcoem.in:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> rcoem.in:443
+[2026-04-12 19:24:28] [HTTPS] 127.0.0.1 -> rcoem.in:443
+[2026-04-12 19:24:29] [HTTPS] 127.0.0.1 -> content-autofill.googleapis.com:443
+[2026-04-12 19:24:29] [HTTPS] 127.0.0.1 -> www.google-analytics.com:443
+[2026-04-12 19:24:49] [BLOCKED HTTPS] 127.0.0.1 -> rcoem.in
+[2026-04-12 19:24:49] [BLOCKED HTTPS] 127.0.0.1 -> rcoem.in
+[2026-04-12 19:24:50] [BLOCKED HTTPS] 127.0.0.1 -> rcoem.in
+[2026-04-12 19:24:50] [BLOCKED HTTPS] 127.0.0.1 -> rcoem.in
+[2026-04-12 19:24:51] [HTTPS] 127.0.0.1 -> play.google.com:443
+[2026-04-12 19:24:51] [HTTPS] 127.0.0.1 -> update.googleapis.com:443
+[2026-04-12 19:24:55] [BLOCKED HTTPS] 127.0.0.1 -> rcoem.in
+[2026-04-12 19:24:55] [BLOCKED HTTPS] 127.0.0.1 -> rcoem.in
+[2026-04-12 19:25:22] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-12 19:25:24] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-12 19:25:24] [BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[2026-04-12 19:25:24] [HTTPS] 127.0.0.1 -> fonts.googleapis.com:443
+[2026-04-12 19:25:24] [HTTPS] 127.0.0.1 -> fonts.gstatic.com:443
+[2026-04-12 19:25:24] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-12 19:25:25] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-12 19:25:25] [BLOCKED HTTPS] 127.0.0.1 -> www.youtube.com
+[2026-04-12 19:25:25] [BLOCKED HTTPS] 127.0.0.1 -> youtube.com
+[2026-04-12 19:25:30] [HTTPS] 127.0.0.1 -> www.gstatic.com:443
+[2026-04-12 19:25:31] [HTTPS] 127.0.0.1 -> www.canva.com:443
+[2026-04-12 19:25:36] [PROXY ERROR] [WinError 10038] An operation was attempted on something that is not a socket
+[2026-04-12 19:25:36] [PROXY STOPPED]
