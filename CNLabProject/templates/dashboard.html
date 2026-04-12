@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h2 style="margin: 0;">Protection Mode</h2>
+        <p style="color: var(--text-dim); margin: 5px 0 0 0;">Current: <strong style="color: var(--primary); text-transform: uppercase;">{{ mode }}</strong></p>
+    </div>
+    <div style="text-align: right;">
+        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+            <div class="dot-{{ status|lower }}" style="width: 10px; height: 10px; border-radius: 50%;"></div>
+            <strong class="status-{{ status|lower }}" style="font-size: 14px;">
+                Engine: {{ status }}
+            </strong>
+        </div>
+        {% if status_error %}
+        <p style="color: var(--danger); font-size: 11px; margin: 4px 0 0 0;">{{ status_error }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h3 style="margin: 0;">Update Settings</h3>
+    </div>
+    <form action="{{ url_for('update_mode') }}" method="POST" style="display: flex; gap: 10px;">
+        <select name="mode">
+            <option value="blacklist" {% if mode == 'blacklist' %}selected{% endif %}>Blacklist (Block specific)</option>
+            <option value="whitelist" {% if mode == 'whitelist' %}selected{% endif %}>Whitelist (Allow specific)</option>
+        </select>
+        <button type="submit">Update Mode</button>
+    </form>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+    <!-- Rule Management -->
+    <div class="card">
+        <h3>Add New Rule</h3>
+        <form action="{{ url_for('add_new_rule') }}" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-dim);">Domain Name</label>
+                <input type="text" name="domain" placeholder="e.g. facebook.com" style="width: 100%; box-sizing: border-box;" required>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-dim);">Category</label>
+                <select name="category" style="width: 100%;">
+                    <option value="Social Media">Social Media</option>
+                    <option value="Gaming">Gaming</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Manual">Manual / Other</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-dim);">Action</label>
+                <select name="action" style="width: 100%;">
+                    <option value="block">Block Always</option>
+                    <option value="allow">Allow Always (Whitelist Override)</option>
+                </select>
+            </div>
+            <button type="submit" style="width: 100%;">Add Safety Rule</button>
+        </form>
+    </div>
+
+    <!-- Active Rules List -->
+    <div class="card">
+        <h3>Active Policies</h3>
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rule in rules %}
+                    <tr>
+                        <td style="font-size: 14px;">{{ rule.domain }}</td>
+                        <td><span style="color: var(--text-dim); font-size: 12px;">{{ rule.category }}</span></td>
+                        <td>
+                            <span class="tag {% if rule.action == 'block' %}tag-block{% else %}tag-allow{% endif %}">
+                                {{ rule.action }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('remove_rule', rule_id=rule.id) }}" style="color: var(--danger); text-decoration: none; font-size: 18px;">&times;</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Activity Monitor</h2>
+        <button onclick="window.location.reload()" style="background: rgba(255,255,255,0.1); font-size: 12px;">Refresh Logs</button>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Domain</th>
+                <th>Status</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td style="color: var(--text-dim); font-size: 13px;">{{ log.timestamp }}</td>
+                <td style="font-weight: 600;">{{ log.domain }}</td>
+                <td>
+                    <span class="tag {% if log.action == 'BLOCKED' %}tag-block{% else %}tag-allow{% endif %}">
+                        {{ log.action }}
+                    </span>
+                </td>
+                <td style="color: var(--text-dim); font-size: 13px;">{{ log.reason or 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+            {% if not logs %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-dim);">No activity logged yet.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

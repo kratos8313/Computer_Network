@@ -30,10 +30,13 @@ def start_system():
         threading.Thread(target=start_proxy, daemon=True).start()
         proxy_started = True
 
-    # Blocking loop
+    # Blocking loop (Anti-Bypass)
     def loop():
+        import time
+        block_sites() # Sync immediately on startup
         while running:
             block_sites()
+            time.sleep(60) # 60-second re-verification as requested
 
     threading.Thread(target=loop, daemon=True).start()
 
