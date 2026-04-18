@@ -1,39 +1,74 @@
 {% extends "base.html" %}
+
+{% block page_title %}Activity Logs{% endblock %}
+
 {% block content %}
-<div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2 style="margin: 0;">Activity Monitor</h2>
-        <button onclick="window.location.reload()" style="background: rgba(255,255,255,0.1); font-size: 12px;">Refresh Logs</button>
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                <i data-lucide="list" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h2 class="font-semibold text-slate-800">Network Activity</h2>
+                <p class="text-xs text-slate-500">Real-time monitoring of DNS requests</p>
+            </div>
+        </div>
+        <button onclick="window.location.reload()" class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-md hover:bg-slate-50 hover:text-slate-900 transition-colors text-sm font-medium shadow-sm">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            Refresh
+        </button>
     </div>
     
-    <table>
-        <thead>
-            <tr>
-                <th>Timestamp</th>
-                <th>Domain</th>
-                <th>Status</th>
-                <th>Reason</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for log in logs %}
-            <tr>
-                <td style="color: var(--text-dim); font-size: 13px;">{{ log.timestamp }}</td>
-                <td style="font-weight: 600;">{{ log.domain }}</td>
-                <td>
-                    <span class="tag {% if log.action == 'BLOCKED' %}tag-block{% else %}tag-allow{% endif %}">
-                        {{ log.action }}
-                    </span>
-                </td>
-                <td style="color: var(--text-dim); font-size: 13px;">{{ log.reason or 'N/A' }}</td>
-            </tr>
-            {% endfor %}
-            {% if not logs %}
-            <tr>
-                <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-dim);">No activity logged yet.</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-white">
+                <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Timestamp</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Domain</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Reason</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-slate-100">
+                {% for log in logs %}
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                    <td class="px-6 py-3 whitespace-nowrap text-sm text-slate-500 font-mono">
+                        {{ log.timestamp }}
+                    </td>
+                    <td class="px-6 py-3 whitespace-nowrap">
+                        <span class="text-sm font-medium text-slate-900">{{ log.domain }}</span>
+                    </td>
+                    <td class="px-6 py-3 whitespace-nowrap">
+                        {% if log.action == 'BLOCKED' %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100">
+                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Blocked
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Allowed
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-3 whitespace-nowrap text-sm text-slate-500">
+                        {{ log.reason or 'N/A' }}
+                    </td>
+                </tr>
+                {% endfor %}
+                
+                {% if not logs %}
+                <tr>
+                    <td colspan="4" class="px-6 py-16 text-center text-sm text-slate-500">
+                        <div class="flex flex-col items-center justify-center">
+                            <i data-lucide="activity" class="w-12 h-12 text-slate-200 mb-3"></i>
+                            <p class="text-base font-medium text-slate-600">No activity logged yet</p>
+                            <p class="mt-1">DNS requests will appear here when monitored.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
