@@ -12,6 +12,26 @@ proxy_running = False
 proxy_status = "STOPPED" # STOPPED, RUNNING, ERROR
 proxy_error = ""
 
+active_sockets = set()
+sockets_lock = threading.Lock()
+
+def register_socket(sock):
+    with sockets_lock:
+        active_sockets.add(sock)
+
+def unregister_socket(sock):
+    with sockets_lock:
+        active_sockets.discard(sock)
+
+def clear_all_connections():
+    with sockets_lock:
+        for sock in list(active_sockets):
+            try:
+                sock.close()
+            except:
+                pass
+        active_sockets.clear()
+
 
 # ---------------- CONFIG ----------------
 # Removed load_config JSON dependency
@@ -62,6 +82,8 @@ def forward(src, dst):
     except (ConnectionResetError, ConnectionAbortedError, OSError):
         pass
     finally:
+        unregister_socket(src)
+        unregister_socket(dst)
         try:
             src.close()
         except:
@@ -74,12 +96,14 @@ def forward(src, dst):
 
 # ---------------- CLIENT HANDLER ----------------
 def handle_client(client_socket, addr):
+    register_socket(client_socket)
     client_ip = addr[0]
 
     try:
         request = client_socket.recv(4096)
         if not request:
             client_socket.close()
+            unregister_socket(client_socket)
             return
 
         request_text = request.decode("utf-8", "ignore")
@@ -99,6 +123,7 @@ def handle_client(client_socket, addr):
                 log_activity(host, "BLOCKED", reason)
                 client_socket.send(b"HTTP/1.1 403 Forbidden\r\n\r\nBlocked by Parent Control")
                 client_socket.close()
+                unregister_socket(client_socket)
                 return
 
             log(f"[HTTPS] {client_ip} -> {host}:{port}")
@@ -106,6 +131,7 @@ def handle_client(client_socket, addr):
 
             try:
                 remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                register_socket(remote)
                 remote.connect((host, port))
 
                 # Tell browser tunnel is ready
@@ -121,6 +147,7 @@ def handle_client(client_socket, addr):
             except Exception as e:
                 log(f"[HTTPS ERROR] {e}")
                 client_socket.close()
+                unregister_socket(client_socket)
 
             return
 
@@ -131,12 +158,14 @@ def handle_client(client_socket, addr):
             log(f"[BLOCKED HTTP] {client_ip} -> {host}")
             client_socket.send(b"HTTP/1.1 403 Forbidden\r\n\r\nBlocked by Proxy")
             client_socket.close()
+            unregister_socket(client_socket)
             return
 
         log(f"[HTTP] {client_ip} -> {host}")
 
         # Forward HTTP request
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        register_socket(server)
         server.connect((host, 80))
         server.send(request)
 
@@ -147,11 +176,14 @@ def handle_client(client_socket, addr):
             client_socket.send(data)
 
         server.close()
+        unregister_socket(server)
         client_socket.close()
+        unregister_socket(client_socket)
 
     except Exception as e:
         log(f"[ERROR] {e}")
         client_socket.close()
+        unregister_socket(client_socket)
 
 
 # ---------------- START PROXY ----------------

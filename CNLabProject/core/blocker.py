@@ -4,6 +4,7 @@ import threading
 from core.database import get_db
 from utils.norm import get_domain_variants
 from utils.logger import log
+from core.proxy import clear_all_connections
 
 HOSTS_PATH = r"C:\Windows\System32\drivers\etc\hosts"
 REDIRECT = "127.0.0.1"
@@ -17,6 +18,8 @@ def flush_dns():
     try:
         subprocess.run(["ipconfig", "/flushdns"], capture_output=True, check=True)
         log("[DNS] Flushed DNS cache successfully.")
+        clear_all_connections()
+        log("[PROXY] Cleared all active proxy connections.")
     except Exception as e:
         log(f"[DNS ERROR] Failed to flush DNS: {e}")
 

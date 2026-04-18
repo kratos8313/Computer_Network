@@ -4,159 +4,159 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parental Control Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --text: #f8fafc;
-            --text-dim: #94a3b8;
-            --border: rgba(255, 255, 255, 0.1);
-            --danger: #ef4444;
-            --success: #10b981;
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
         }
-
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Glass card for login */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-        }
-
-        .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            margin-left: 20px;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        h1, h2, h3 { margin-top: 0; }
-
-        input, select, button {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        button {
-            background: var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: none;
-        }
-
-        button:hover { background: var(--primary-hover); transform: translateY(-1px); }
-
-        .btn-danger { background: var(--danger); }
-        .btn-danger:hover { background: #dc2626; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th { color: var(--text-dim); font-weight: 600; font-size: 12px; text-transform: uppercase; }
-
-        .tag {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .tag-block { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .tag-block { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .tag-allow { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-
-        /* Status Colors */
-        .status-running { color: var(--success) !important; }
-        .dot-running { background: var(--success) !important; }
-        .status-error { color: var(--danger) !important; }
-        .dot-error { background: var(--danger) !important; }
-        .status-stopped { color: var(--text-dim) !important; }
-        .dot-stopped { background: var(--text-dim) !important; }
-
-        .flash-msg {
-            background: var(--danger);
-            color: white;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
     {% block head %}{% endblock %}
 </head>
-<body>
-    <div class="container">
-        {% if session.logged_in %}
-        <nav>
-            <div style="font-weight: 700; font-size: 20px;">🛡️ ChildSafety<span style="color: var(--primary);">Protocol</span></div>
-            <div class="nav-links">
-                <a href="{{ url_for('index') }}">Dashboard</a>
-                <a href="{{ url_for('view_logs') }}">Activity Logs</a>
-                <a href="{{ url_for('logout') }}" style="color: var(--danger);">Logout</a>
+<body class="text-slate-800 antialiased min-h-screen flex bg-slate-50">
+    {% if session.logged_in %}
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex sticky top-0 h-screen">
+        <div class="h-16 px-6 border-b border-slate-200 flex items-center gap-3">
+            <div class="p-1.5 bg-primary-100 rounded-lg text-primary-600">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
             </div>
+            <div class="font-bold text-lg tracking-tight text-slate-900">ChildSafe</div>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-1">
+            <a href="{{ url_for('index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {% if request.endpoint == 'index' %}bg-primary-50 text-primary-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Dashboard
+            </a>
+            <a href="{{ url_for('view_logs') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {% if request.endpoint == 'view_logs' %}bg-primary-50 text-primary-700{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-900{% endif %}">
+                <i data-lucide="activity" class="w-5 h-5"></i>
+                Activity Logs
+            </a>
         </nav>
-        {% endif %}
+        
+        <div class="p-4 border-t border-slate-200">
+            <a href="{{ url_for('logout') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                Logout
+            </a>
+        </div>
+    </aside>
 
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% for message in messages %}
-              <div class="flash-msg">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
+    <!-- Main Content wrapper -->
+    <div class="flex-1 flex flex-col min-h-screen relative overflow-hidden bg-slate-50/50">
+        <!-- Top Navbar -->
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10 px-8 py-4 flex justify-between items-center h-16">
+            <h1 class="text-xl font-semibold text-slate-800">
+                {% block page_title %}Overview{% endblock %}
+            </h1>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-primary-50 border border-primary-100 flex items-center justify-center text-primary-600">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-sm font-medium text-slate-700 hidden sm:block">Admin Session</span>
+                </div>
+            </div>
+        </header>
 
-        {% block content %}{% endblock %}
+        <!-- Page Content -->
+        <main class="flex-1 p-8 overflow-y-auto w-full fade-in">
+            <div class="max-w-5xl mx-auto w-full">
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class="space-y-4 mb-6">
+                    {% for message in messages %}
+                      <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg flex items-center gap-3 shadow-sm">
+                          <i data-lucide="info" class="w-5 h-5 text-yellow-600"></i>
+                          <span class="text-sm font-medium">{{ message }}</span>
+                      </div>
+                    {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </div>
+        </main>
     </div>
+    {% else %}
+        <!-- For Login Page (No Sidebar) -->
+        <main class="w-full min-h-screen flex flex-col justify-center items-center p-4 bg-slate-50 relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary-200/20 blur-3xl"></div>
+                <div class="absolute top-[60%] -right-[10%] w-[40%] h-[40%] rounded-full bg-blue-200/20 blur-3xl"></div>
+            </div>
+            
+            <div class="w-full max-w-md z-10 relative fade-in">
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class="space-y-4 mb-6">
+                    {% for message in messages %}
+                      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex text-left items-start gap-3 shadow-sm">
+                          <i data-lucide="alert-circle" class="w-5 h-5 flex-shrink-0 text-red-500 mt-0.5"></i>
+                          <span class="text-sm font-medium">{{ message }}</span>
+                      </div>
+                    {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+                
+                {% block login_content %}{% endblock %}
+            </div>
+        </main>
+    {% endif %}
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+      lucide.createIcons();
+    </script>
 </body>
 </html>
