@@ -1,8 +1,10 @@
 import datetime
+from core.paths import LOG_PATH
 
-def log(msg):
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    formatted_msg = f"[{timestamp}] {msg}"
-    print(formatted_msg)
-    with open("log.txt", "a") as f:
-        f.write(formatted_msg + "\n")
+
+def log(message):
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    formatted = f'[{timestamp}] {message}'
+    print(formatted)
+    with LOG_PATH.open('a', encoding='utf-8') as handle:
+        handle.write(formatted + '\n')
