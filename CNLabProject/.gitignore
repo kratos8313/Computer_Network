@@ -1,5 +1,9 @@
-﻿__pycache__/
+__pycache__/
+*.py[cod]
 *.db
 log.txt
 config/settings.json
+config/flask_secret.key
+config/*.bak
 .DS_Store
+.venv/

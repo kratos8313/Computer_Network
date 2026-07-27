@@ -1,234 +1,250 @@
+import ipaddress
 import socket
 import threading
-from utils.logger import log
-from core.rules import should_block
+from urllib.parse import urlsplit
 from core.database import log_activity
+from core.rules import should_block
+from utils.logger import log
 
-CONFIG_PATH = "config/settings.json"
-
-#Global variables
 server_socket = None
 proxy_running = False
-proxy_status = "STOPPED" # STOPPED, RUNNING, ERROR
-proxy_error = ""
-
+proxy_status = 'STOPPED'
+proxy_error = ''
 active_sockets = set()
 sockets_lock = threading.Lock()
+MAX_HEADER = 65536
+CONNECT_PORTS = {443, 8443}
+HTTP_PORTS = {80, 8080}
+
 
 def register_socket(sock):
     with sockets_lock:
         active_sockets.add(sock)
 
+
 def unregister_socket(sock):
     with sockets_lock:
         active_sockets.discard(sock)
 
+
+def close_socket(sock):
+    unregister_socket(sock)
+    try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except OSError:
+        pass
+    try:
+        sock.close()
+    except OSError:
+        pass
+
+
 def clear_all_connections():
     with sockets_lock:
-        for sock in list(active_sockets):
-            try:
-                sock.close()
-            except:
-                pass
+        sockets = list(active_sockets)
         active_sockets.clear()
+    for sock in sockets:
+        close_socket(sock)
 
 
-# ---------------- CONFIG ----------------
-# Removed load_config JSON dependency
-
-
-# ---------------- DPI ----------------
-def dpi_inspect(data, client_ip):
-    text = data.decode("utf-8", "ignore").lower()
-    
-    host = ""
-    for line in text.split("\r\n"):
-        if line.startswith("host:"):
-            host = line.split(":", 1)[1].strip()
+def _read_headers(sock):
+    data = bytearray()
+    while b'\r\n\r\n' not in data:
+        chunk = sock.recv(4096)
+        if not chunk:
             break
-
-    if not host: 
-        return "ALLOW", ""
-
-    # Check Rules
-    blocked, reason = should_block(host)
-    
-    # Keyword detection (Keeping existing feature)
-    for keyword in ["password", "login"]:
-        if keyword in text:
-            log(f"[ALERT] Keyword '{keyword}' from {client_ip}")
-
-    # Root keyword search (Extra safety for related CDNs)
-    if not blocked:
-        # Check if the host contains any part of our blocked rules as a root domain
-        pass # should_block already handles LIKE %domain% now
-
-    if blocked:
-        log_activity(host, "BLOCKED", reason)
-        return "BLOCK", host
-    
-    log_activity(host, "ALLOWED")
-    return "ALLOW", host
+        data.extend(chunk)
+        if len(data) > MAX_HEADER:
+            raise ValueError('Request headers exceed 64 KiB')
+    return bytes(data)
 
 
-# ---------------- SAFE FORWARD ----------------
+def _parse_authority(authority, default_port):
+    parsed = urlsplit('//' + authority)
+    if not parsed.hostname:
+        raise ValueError('Missing destination host')
+    try:
+        port = parsed.port or default_port
+    except ValueError as exc:
+        raise ValueError('Invalid destination port') from exc
+    return parsed.hostname.rstrip('.').lower(), port
+
+
+def _validate_destination(host, port, allowed_ports):
+    if port not in allowed_ports:
+        raise ValueError(f'Destination port {port} is not allowed')
+    addresses = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    if not addresses:
+        raise ValueError('Destination could not be resolved')
+    for item in addresses:
+        address = ipaddress.ip_address(item[4][0])
+        if address.is_private or address.is_loopback or address.is_link_local or address.is_multicast or address.is_unspecified:
+            raise ValueError('Private and local destinations are not allowed')
+    return addresses
+
+
+def _connect_public(host, port, allowed_ports):
+    addresses = _validate_destination(host, port, allowed_ports)
+    family, socktype, proto, _, sockaddr = addresses[0]
+    remote = socket.socket(family, socktype, proto)
+    remote.settimeout(10)
+    remote.connect(sockaddr)
+    remote.settimeout(30)
+    register_socket(remote)
+    return remote
+
+
 def forward(src, dst):
     try:
         while True:
-            data = src.recv(4096)
+            data = src.recv(16384)
             if not data:
                 break
             dst.sendall(data)
     except (ConnectionResetError, ConnectionAbortedError, OSError):
         pass
     finally:
-        unregister_socket(src)
-        unregister_socket(dst)
-        try:
-            src.close()
-        except:
-            pass
-        try:
-            dst.close()
-        except:
-            pass
+        close_socket(src)
+        close_socket(dst)
 
 
-# ---------------- CLIENT HANDLER ----------------
+def _send_error(client, status, message):
+    body = message.encode('utf-8', 'replace')
+    client.sendall(f'HTTP/1.1 {status}\r\nContent-Length: {len(body)}\r\nConnection: close\r\n\r\n'.encode() + body)
+
+
 def handle_client(client_socket, addr):
     register_socket(client_socket)
-    client_ip = addr[0]
-
+    client_socket.settimeout(15)
+    remote = None
     try:
-        request = client_socket.recv(4096)
-        if not request:
-            client_socket.close()
-            unregister_socket(client_socket)
+        request_data = _read_headers(client_socket)
+        if not request_data:
             return
+        header, separator, remainder = request_data.partition(b'\r\n\r\n')
+        lines = header.decode('iso-8859-1').split('\r\n')
+        method, target, version = lines[0].split(' ', 2)
+        headers = {}
+        for line in lines[1:]:
+            if ':' in line:
+                key, value = line.split(':', 1)
+                headers[key.strip().lower()] = value.strip()
 
-        request_text = request.decode("utf-8", "ignore")
-        request_line = request_text.split("\n")[0]
-
-        # ================= HTTPS =================
-        if request_line.startswith("CONNECT"):
-            host_port = request_line.split(" ")[1]
-            host, port = host_port.split(":")
-            port = int(port)
-
-            # Check Rules
+        if method.upper() == 'CONNECT':
+            host, port = _parse_authority(target, 443)
             blocked, reason = should_block(host)
-
             if blocked:
-                log(f"[BLOCKED HTTPS] {client_ip} -> {host}")
-                log_activity(host, "BLOCKED", reason)
-                client_socket.send(b"HTTP/1.1 403 Forbidden\r\n\r\nBlocked by Parent Control")
-                client_socket.close()
-                unregister_socket(client_socket)
+                log_activity(host, 'BLOCKED', reason)
+                _send_error(client_socket, '403 Forbidden', 'Blocked by Parental Control')
                 return
-
-            log(f"[HTTPS] {client_ip} -> {host}:{port}")
-            # log_activity(host, "ALLOWED") # Removing to avoid log bloat for every HTTPS tunnel stream
-
-            try:
-                remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                register_socket(remote)
-                remote.connect((host, port))
-
-                # Tell browser tunnel is ready
-                client_socket.send(b"HTTP/1.1 200 Connection Established\r\n\r\n")
-
-                # Start bidirectional forwarding
-                t1 = threading.Thread(target=forward, args=(client_socket, remote), daemon=True)
-                t2 = threading.Thread(target=forward, args=(remote, client_socket), daemon=True)
-
-                t1.start()
-                t2.start()
-
-            except Exception as e:
-                log(f"[HTTPS ERROR] {e}")
-                client_socket.close()
-                unregister_socket(client_socket)
-
+            remote = _connect_public(host, port, CONNECT_PORTS)
+            client_socket.sendall(b'HTTP/1.1 200 Connection Established\r\n\r\n')
+            threading.Thread(target=forward, args=(client_socket, remote), daemon=True).start()
+            threading.Thread(target=forward, args=(remote, client_socket), daemon=True).start()
+            remote = None
+            client_socket = None
             return
 
-        # ================= HTTP =================
-        action, host = dpi_inspect(request, client_ip)
-
-        if action == "BLOCK":
-            log(f"[BLOCKED HTTP] {client_ip} -> {host}")
-            client_socket.send(b"HTTP/1.1 403 Forbidden\r\n\r\nBlocked by Proxy")
-            client_socket.close()
-            unregister_socket(client_socket)
+        parsed = urlsplit(target)
+        authority = parsed.netloc or headers.get('host', '')
+        host, port = _parse_authority(authority, 80)
+        blocked, reason = should_block(host)
+        if blocked:
+            log_activity(host, 'BLOCKED', reason)
+            _send_error(client_socket, '403 Forbidden', 'Blocked by Parental Control')
             return
-
-        log(f"[HTTP] {client_ip} -> {host}")
-
-        # Forward HTTP request
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        register_socket(server)
-        server.connect((host, 80))
-        server.send(request)
-
+        path = parsed.path or '/'
+        if parsed.query:
+            path += '?' + parsed.query
+        filtered = [line for line in lines[1:] if not line.lower().startswith(('proxy-connection:', 'connection:'))]
+        outbound = (f'{method} {path} {version}\r\n' + '\r\n'.join(filtered) + '\r\nConnection: close\r\n\r\n').encode('iso-8859-1') + remainder
+        if headers.get('transfer-encoding', '').lower() not in {'', 'identity'}:
+            raise ValueError('Chunked request bodies are not supported')
+        content_length = int(headers.get('content-length', '0'))
+        if content_length < 0 or content_length > 10 * 1024 * 1024:
+            raise ValueError('Request body is too large')
+        remote = _connect_public(host, port, HTTP_PORTS)
+        remote.sendall(outbound)
+        remaining = max(0, content_length - len(remainder))
+        while remaining:
+            chunk = client_socket.recv(min(16384, remaining))
+            if not chunk:
+                raise ValueError('Incomplete request body')
+            remote.sendall(chunk)
+            remaining -= len(chunk)
+        log_activity(host, 'ALLOWED')
         while True:
-            data = server.recv(4096)
+            data = remote.recv(16384)
             if not data:
                 break
-            client_socket.send(data)
+            client_socket.sendall(data)
+    except (ValueError, socket.timeout) as exc:
+        log(f'[REQUEST REJECTED] {addr[0]}: {exc}')
+        try:
+            _send_error(client_socket, '400 Bad Request', str(exc))
+        except OSError:
+            pass
+    except Exception as exc:
+        log(f'[PROXY ERROR] {addr[0]}: {exc}')
+        try:
+            _send_error(client_socket, '502 Bad Gateway', 'Proxy request failed')
+        except OSError:
+            pass
+    finally:
+        if remote is not None:
+            close_socket(remote)
+        if client_socket is not None:
+            close_socket(client_socket)
 
-        server.close()
-        unregister_socket(server)
-        client_socket.close()
-        unregister_socket(client_socket)
 
-    except Exception as e:
-        log(f"[ERROR] {e}")
-        client_socket.close()
-        unregister_socket(client_socket)
-
-
-# ---------------- START PROXY ----------------
-def start_proxy(host="127.0.0.1", port=8080):
+def start_proxy(ready_event=None, startup_error=None, host='127.0.0.1', port=8080):
     global server_socket, proxy_running, proxy_status, proxy_error
-
+    ready_event = ready_event or threading.Event()
+    startup_error = startup_error if startup_error is not None else []
     try:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((host, port))
         server_socket.listen(50)
-        
+        server_socket.settimeout(1)
         proxy_running = True
-        proxy_status = "RUNNING"
-        proxy_error = ""
-        log(f"[PROXY STARTED] {host}:{port}")
-
+        proxy_status = 'RUNNING'
+        proxy_error = ''
+        ready_event.set()
+        log(f'[PROXY STARTED] {host}:{port}')
         while proxy_running:
-            client_socket, addr = server_socket.accept()
-            threading.Thread(target=handle_client, args=(client_socket, addr), daemon=True).start()
-
-    except Exception as e:
-        proxy_status = "ERROR"
-        proxy_error = str(e)
-        log(f"[PROXY ERROR] {e}")
-
+            try:
+                client, addr = server_socket.accept()
+            except socket.timeout:
+                continue
+            except OSError:
+                if not proxy_running:
+                    break
+                raise
+            threading.Thread(target=handle_client, args=(client, addr), daemon=True).start()
+    except Exception as exc:
+        proxy_status = 'ERROR'
+        proxy_error = str(exc)
+        startup_error.append(str(exc))
+        ready_event.set()
+        log(f'[PROXY ERROR] {exc}')
     finally:
         proxy_running = False
-        if proxy_status != "ERROR":
-            proxy_status = "STOPPED"
+        if proxy_status != 'ERROR':
+            proxy_status = 'STOPPED'
         if server_socket:
-            server_socket.close()
-        log("[PROXY STOPPED]")
+            close_socket(server_socket)
+            server_socket = None
+        log('[PROXY STOPPED]')
+
 
 def get_proxy_status():
     return proxy_status, proxy_error
 
-# ---------------- STOP PROXY ----------------
+
 def stop_proxy():
     global proxy_running, server_socket
-
     proxy_running = False
-
     if server_socket:
-        try:
-            server_socket.close()
-        except:
-            pass
+        close_socket(server_socket)
+    clear_all_connections()

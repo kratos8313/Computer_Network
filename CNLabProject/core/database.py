@@ -1,120 +1,98 @@
-import sqlite3
 import hashlib
-import datetime
-import os
+import hmac
+import sqlite3
+from werkzeug.security import check_password_hash, generate_password_hash
+from core.paths import CONFIG_DIR, DB_PATH
 
-DB_PATH = "config/parental_control.db"
+class ClosingConnection(sqlite3.Connection):
+    def __exit__(self, exc_type, exc_value, traceback):
+        try:
+            return super().__exit__(exc_type, exc_value, traceback)
+        finally:
+            self.close()
+
+
 
 def get_db():
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(DB_PATH, timeout=10, factory=ClosingConnection)
     conn.row_factory = sqlite3.Row
     return conn
 
+
 def init_db():
-    conn = get_db()
-    cursor = conn.cursor()
-
-    # Settings table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS settings (
-            key TEXT PRIMARY KEY,
-            value TEXT
-        )
-    """)
-
-    # Rules table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS rules (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            domain TEXT UNIQUE,
-            category TEXT,
-            action TEXT DEFAULT 'block'
-        )
-    """)
-
-    # Schedules table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS schedules (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            target TEXT,-- Category name or Domain
-            type TEXT,-- 'category' or 'domain'
-            start_time TEXT,-- HH:MM
-            end_time TEXT   -- HH:MM
-        )
-    """)
-
-    # Logs table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS logs (
+    with get_db() as conn:
+        conn.execute("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)")
+        conn.execute("""CREATE TABLE IF NOT EXISTS rules (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, domain TEXT UNIQUE NOT NULL,
+            category TEXT NOT NULL DEFAULT 'Manual',
+            action TEXT NOT NULL DEFAULT 'block' CHECK(action IN ('block', 'allow')))""")
+        conn.execute("""CREATE TABLE IF NOT EXISTS schedules (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, target TEXT NOT NULL,
+            type TEXT NOT NULL CHECK(type IN ('category', 'domain')),
+            start_time TEXT NOT NULL, end_time TEXT NOT NULL)""")
+        conn.execute("""CREATE TABLE IF NOT EXISTS logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-            domain TEXT,
-            action TEXT,
-            reason TEXT
-        )
-    """)
+            domain TEXT, action TEXT, reason TEXT)""")
+        conn.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('mode', 'blacklist')")
 
-    # Default settings
-    cursor.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('mode', 'blacklist')")
-    
-    conn.commit()
-    conn.close()
 
-# --- Auth Helpers ---
 def set_password(password):
-    conn = get_db()
-    pwd_hash = hashlib.sha256(password.encode()).hexdigest()
-    conn.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('password', ?)", (pwd_hash,))
-    conn.commit()
-    conn.close()
+    if not password or len(password) < 8:
+        raise ValueError("Password must contain at least 8 characters")
+    value = generate_password_hash(password, method="scrypt")
+    with get_db() as conn:
+        conn.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('password', ?)", (value,))
+
 
 def check_password(password):
-    conn = get_db()
-    row = conn.execute("SELECT value FROM settings WHERE key='password'").fetchone()
-    conn.close()
-    if not row: return False
-    return hashlib.sha256(password.encode()).hexdigest() == row['value']
+    if not password:
+        return False
+    with get_db() as conn:
+        row = conn.execute("SELECT value FROM settings WHERE key='password'").fetchone()
+    if not row:
+        return False
+    stored = row['value']
+    if stored.startswith(('scrypt:', 'pbkdf2:')):
+        return check_password_hash(stored, password)
+    legacy = hashlib.sha256(password.encode()).hexdigest()
+    if len(stored) == 64 and hmac.compare_digest(legacy, stored):
+        set_password(password)
+        return True
+    return False
 
-# --- Rules Helpers ---
-def add_rule(domain, category="Manual", action="block"):
+
+def add_rule(domain, category='Manual', action='block'):
     from utils.norm import get_root_domain
     domain = get_root_domain(domain)
-    if not domain: return
-    
-    conn = get_db()
-    try:
-        conn.execute("INSERT INTO rules (domain, category, action) VALUES (?, ?, ?)", (domain, category, action))
-        conn.commit()
-    except sqlite3.IntegrityError:
-        pass
-    conn.close()
+    if not domain:
+        raise ValueError("A valid domain is required")
+    if action not in {'block', 'allow'}:
+        raise ValueError("Invalid rule action")
+    category = (category or 'Manual').strip()[:80]
+    with get_db() as conn:
+        conn.execute("""INSERT INTO rules (domain, category, action) VALUES (?, ?, ?)
+            ON CONFLICT(domain) DO UPDATE SET category=excluded.category, action=excluded.action""",
+            (domain, category, action))
+
 
 def get_rules():
-    conn = get_db()
-    rules = conn.execute("SELECT * FROM rules").fetchall()
-    conn.close()
-    return rules
+    with get_db() as conn:
+        return conn.execute("SELECT * FROM rules ORDER BY domain").fetchall()
+
 
 def delete_rule(rule_id):
-    conn = get_db()
-    conn.execute("DELETE FROM rules WHERE id=?", (rule_id,))
-    conn.commit()
-    conn.close()
+    with get_db() as conn:
+        conn.execute("DELETE FROM rules WHERE id=?", (rule_id,))
 
-# --- Logging ---
-def log_activity(domain, action, reason="Policy"):
-    conn = get_db()
-    conn.execute("INSERT INTO logs (domain, action, reason) VALUES (?, ?, ?)", (domain, action, reason))
-    conn.commit()
-    conn.close()
+
+def log_activity(domain, action, reason='Policy'):
+    with get_db() as conn:
+        conn.execute("INSERT INTO logs (domain, action, reason) VALUES (?, ?, ?)", (domain, action, reason))
+
 
 def get_logs(limit=100):
-    conn = get_db()
-    logs = conn.execute("SELECT * FROM logs ORDER BY timestamp DESC LIMIT ?", (limit,)).fetchall()
-    conn.close()
-    return logs
-
-if __name__ == "__main__":
-    init_db()
-    print("Database initialized.")
+    safe_limit = max(1, min(int(limit), 1000))
+    with get_db() as conn:
+        return conn.execute("SELECT * FROM logs ORDER BY timestamp DESC LIMIT ?", (safe_limit,)).fetchall()

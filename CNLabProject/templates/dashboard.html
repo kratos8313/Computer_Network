@@ -33,6 +33,7 @@
     <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
         <h3 class="text-sm font-medium text-slate-500 mb-4">Mode Configuration</h3>
         <form action="{{ url_for('update_mode') }}" method="POST" class="flex gap-3">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
             <div class="relative flex-1">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                     <i data-lucide="sliders" class="w-4 h-4"></i>
@@ -63,6 +64,7 @@
             </div>
             <div class="p-6">
                 <form action="{{ url_for('add_new_rule') }}" method="POST" class="space-y-4">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Domain Name</label>
                         <div class="relative">
@@ -72,7 +74,7 @@
                             <input type="text" name="domain" id="domain_input" placeholder="e.g. facebook.com" class="block w-full pl-11 pr-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none" required>
                         </div>
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Category</label>
                         <div class="relative">
@@ -88,7 +90,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1.5">Action</label>
                         <div class="relative mb-2">
@@ -109,7 +111,7 @@
                             {% endif %}
                         </p>
                     </div>
-                    
+
                     <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 transition-colors flex justify-center items-center gap-2 mt-2">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         Add Safety Rule
@@ -129,7 +131,7 @@
                 </div>
                 <span class="bg-slate-200 text-slate-700 text-xs py-1 px-2.5 rounded-full font-medium">{{ rules|length }} rules</span>
             </div>
-            
+
             <div class="flex-1 overflow-auto max-h-[400px]">
                 <table class="min-w-full divide-y divide-slate-200">
                     <thead class="bg-white sticky top-0 z-10">
@@ -168,13 +170,16 @@
                                 {% endif %}
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ url_for('remove_rule', rule_id=rule.id) }}" class="text-slate-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100" title="Remove rule">
-                                    <i data-lucide="trash-2" class="w-5 h-5 ml-auto"></i>
-                                </a>
+                                <form action="{{ url_for('remove_rule', rule_id=rule.id) }}" method="POST">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="text-slate-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100" title="Remove rule">
+                                        <i data-lucide="trash-2" class="w-5 h-5 ml-auto"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         {% endfor %}
-                        
+
                         {% if not rules %}
                         <tr>
                             <td colspan="4" class="px-6 py-12 text-center text-sm text-slate-500">
