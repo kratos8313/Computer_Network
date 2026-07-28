@@ -64,7 +64,7 @@ class DesktopRecoveryTests(unittest.TestCase):
     def test_repair_requests_an_elevated_automatic_install(self):
         with mock.patch.object(desktop, 'run_elevated_service', return_value=True) as run:
             self.assertTrue(desktop.request_service_install())
-        run.assert_called_once_with('install --startup auto')
+        run.assert_called_once_with('--startup auto install')
 
 
 class ControllerLifecycleTests(unittest.TestCase):

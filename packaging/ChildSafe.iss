@@ -1,5 +1,5 @@
 #define AppName "ChildSafe Parental Control"
-#define AppVersion "1.0.1"
+#define AppVersion "1.0.2"
 #define ServiceName "ChildSafeService"
 
 [Setup]
@@ -86,9 +86,9 @@ var
 begin
   ServiceExe := ExpandConstant('{app}\Service\ChildSafeService.exe');
   if ServiceExists then
-    ExecRequired(ServiceExe, 'update --startup auto', 'Could not update the ChildSafe Windows service')
+    ExecRequired(ServiceExe, '--startup auto update', 'Could not update the ChildSafe Windows service')
   else
-    ExecRequired(ServiceExe, 'install --startup auto', 'Could not install the ChildSafe Windows service');
+    ExecRequired(ServiceExe, '--startup auto install', 'Could not install the ChildSafe Windows service');
 
   ExecRequired(ExpandConstant('{sys}\sc.exe'),
     'failure {#ServiceName} reset= 86400 actions= restart/5000/restart/15000/restart/30000',
