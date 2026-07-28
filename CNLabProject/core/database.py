@@ -63,6 +63,16 @@ def check_password(password):
     return False
 
 
+def get_setting(key, default=None):
+    with get_db() as conn:
+        row = conn.execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+    return row['value'] if row else default
+
+
+def set_setting(key, value):
+    with get_db() as conn:
+        conn.execute("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", (key, value))
+
 def add_rule(domain, category='Manual', action='block'):
     from utils.norm import get_root_domain
     domain = get_root_domain(domain)
@@ -96,3 +106,12 @@ def get_logs(limit=100):
     safe_limit = max(1, min(int(limit), 1000))
     with get_db() as conn:
         return conn.execute("SELECT * FROM logs ORDER BY timestamp DESC LIMIT ?", (safe_limit,)).fetchall()
+
+
+def get_security_alerts(limit=5):
+    safe_limit = max(1, min(int(limit), 100))
+    with get_db() as conn:
+        return conn.execute(
+            "SELECT * FROM logs WHERE action='denied' ORDER BY timestamp DESC LIMIT ?",
+            (safe_limit,),
+        ).fetchall()

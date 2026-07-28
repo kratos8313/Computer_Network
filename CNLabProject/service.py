@@ -18,8 +18,8 @@ SERVICE_NAME = 'ChildSafeService'
 
 class ChildSafeService(win32serviceutil.ServiceFramework):
     _svc_name_ = SERVICE_NAME
-    _svc_display_name_ = 'ChildSafe Parental Control'
-    _svc_description_ = 'Enforces ChildSafe network rules and hosts the parent dashboard.'
+    _svc_display_name_ = 'ChildSafe Network Control'
+    _svc_description_ = 'Enforces administrator-defined network rules and hosts the local control dashboard.'
 
     def __init__(self, args):
         super().__init__(args)
@@ -28,8 +28,14 @@ class ChildSafeService(win32serviceutil.ServiceFramework):
 
     def SvcStop(self):
         from core.controller import stop_system
+        from core.notifications import send_notification
 
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+        send_notification(
+            'service_stop_requested',
+            'The network protection service received a stop request.',
+            'critical',
+        )
         if self.http_server:
             self.http_server.shutdown()
         stop_system()

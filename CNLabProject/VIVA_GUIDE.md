@@ -1,135 +1,88 @@
-# 📖 Viva Guide: Simplified Project Breakdown
+# Viva Guide: ChildSafe Network Control
 
-This guide explains each file in your Parental Control System in simple terms. Use this to prepare for your project demonstration and viva questions.
+## What is the project?
 
----
+ChildSafe Network Control is a Windows application that enforces website-access policies on a managed computer. It can be used by parents at home or by administrators in college labs, classrooms, libraries, and similar environments.
 
-## 📁 main.py
-### What it does:
-This is the **starting point** (entry point) of the entire system. When you run this file, it turns everything on.
+## Why is it a computer-networks project?
 
-### Why we need it:
-Without this, you would have to start the web dashboard, the proxy, and the blocker one by one. This file coordinates everything so the system works as a single unit.
+The application works in the path between a browser and the internet. It configures a loopback proxy, reads the requested destination, applies a rule, and either forwards or rejects the connection. It also uses hostname resolution through the Windows hosts file as a second layer.
 
-### What happens inside:
-It initializes the database, checks if you have set a parent password, and then starts the background "engine" and the web dashboard in two different threads so they can run at the same time.
+## What does each major file do?
 
-### How it connects to others:
-It calls functions from `controller.py` to start the engine and imports `app.py` to start the web interface.
+### `service.py`
 
----
+Runs the protection engine and dashboard as an automatic Windows service. This means closing the desktop window does not stop enforcement and protection returns after a reboot.
 
-## 📁 app.py
-### What it does:
-This file manages the **Web Dashboard** (the interface you see in your browser). It handles all the buttons, forms, and pages.
+### `desktop.py`
 
-### Why we need it:
-It provides a user-friendly way for a parent to manage rules without having to write code or touch the database directly.
+Provides a normal Windows launcher. It checks the service and protection status, opens the administrator dashboard, and can request an elevated service repair when necessary.
 
-### What happens inside:
-It uses the Flask framework to define "routes" (links). For example, when you click "Add Rule," this file receives the domain name and tells the database to save it.
+### `app.py`
 
-### How it connects to others:
-It talks to `database.py` to save/load rules and calls `blocker.py` to apply those rules to the system immediately.
+Provides the local web dashboard. It handles login, policy changes, logs, protection pause/resume, and notification settings. Sensitive operations require the administrator password again.
 
----
+### `controller.py`
 
-## 📁 controller.py
-### What it does:
-This is the **system conductor**. It manages the lifecycle of the background workers (the Proxy and the Blocker).
+Coordinates the background workers. It starts and stops the proxy, applies the hosts-file policy, and periodically repairs enforcement settings.
 
-### Why we need it:
-It ensures that the blocking logic keeps running even if you close the dashboard. It also handles the "Anti-Bypass" loop to make sure rules stay active.
+### `rules.py`
 
-### What happens inside:
-It contains a loop that runs every 60 seconds to re-verify that the rules are still applied. It also makes sure the System Proxy is turned on when the app starts and off when it stops.
+Acts as the decision engine. In blacklist mode, listed blocked domains are denied. In whitelist mode, destinations are denied unless an allow rule matches.
 
-### How it connects to others:
-It starts the threads in `proxy.py` and periodically calls the blocking functions in `blocker.py`.
+### `proxy.py`
 
----
+Listens locally for HTTP and HTTPS proxy requests. It extracts the hostname, consults the rules engine, forwards allowed traffic, and rejects and logs blocked traffic.
 
-## 📁 rules.py
-### What it does:
-This is the **Decision Maker**. Its only job is to look at a website and say "Yes, Allow" or "No, Block."
+### `blocker.py`
 
-### Why we need it:
-It contains the core logic for the **Blacklist** and **Whitelist** modes. Without this, the system wouldn't know which rule to apply when.
+Maintains a clearly marked section in the Windows hosts file. It adds IPv4 and IPv6 loopback entries for blocked domains while preserving unrelated system entries.
 
-### What happens inside:
-It takes a domain name, checks the current mode (Whitelist or Blacklist) from the database, and looks for matching rules or schedules. It returns a simple "True" (Block) or "False" (Allow).
+### `machine_proxy.py`
 
-### How it connects to others:
-It is called by `proxy.py` every time a user tries to visit a website. It also pulls data from `database.py`.
+Configures the Windows machine-wide proxy and verifies that the setting has not been changed.
 
----
+### `database.py`
 
-## 📁 blocker.py
-### What it does:
-This is the **Security Guard**. It modifies the Windows `hosts` file to block websites at the system level.
+Stores rules, settings, password hashes, and activity logs in SQLite under the protected application data directory.
 
-### Why we need it:
-If a user tries to bypass the proxy, the `hosts` file acts as a second wall. It redirects websites to `127.0.0.1` so they never load.
+### `notifications.py`
 
-### What happens inside:
-It looks at the blocked list in the database and writes them into the `hosts` file between special markers (`# BEGIN PARENTAL CONTROL`). It also handles IPv6 (`::1`) for extra security.
+Sends security events to an administrator-configured HTTPS endpoint. Each alert identifies the event, severity, computer, message, and UTC time. Duplicate domain alerts are grouped for five minutes.
 
-### How it connects to others:
-It gets the list of sites from `database.py` and is triggered by `controller.py` and `app.py`.
+### `uninstall_guard.py`
 
----
+Prompts for the application administrator password before uninstall proceeds. Successful and denied attempts are logged and notified.
 
-## 📁 database.py
-### What it does:
-This is the **System Storage** (The Vault). It manages the SQLite database file where all your rules and settings live.
+## Typical request flow
 
-### Why we need it:
-Without this, all your rules would disappear every time you closed the program. It makes your settings permanent.
+1. An administrator adds a blocked domain.
+2. The rule is normalized and stored in SQLite.
+3. Enforcement updates the proxy decision set and hosts-file entries.
+4. A standard user requests the domain.
+5. The proxy asks the rules engine whether it is allowed.
+6. The proxy returns 403 when blocked, records the attempt, and queues an immediate alert.
+7. The configured receiver tells the parent, instructor, or lab administrator which computer generated the event.
 
-### What happens inside:
-It contains SQL commands to create tables, add new rules, delete rules, and check the parent password. It handles the "Smart Cleaning" of URLs before they are saved.
+## Important viva questions
 
-### How it connects to others:
-Almost every file (`app.py`, `rules.py`, `blocker.py`) connects to this one to read or save data.
+**Why use both a proxy and the hosts file?**
+The proxy provides real-time decisions and logs. The hosts file adds another local blocking layer for named destinations.
 
----
+**Why must managed users be standard Windows users?**
+An administrator owns the machine's security configuration and can stop services, edit protected files, or replace software. Local software cannot reliably prevent its own owner from bypassing it.
 
-## 📁 proxy.py
-### What it does:
-This is the **Traffic Interceptor**. It acts as a middleman between your browser and the internet.
+**Why is the dashboard bound to localhost?**
+It prevents other network devices from directly reaching the administration interface. Remote alerts are outbound-only HTTPS requests.
 
-### Why we need it:
-It allows the system to see exactly which website is being requested in real-time, allowing it to block specific pages even if the `hosts` file is bypassed.
+**How are passwords protected?**
+The database stores a salted scrypt hash, not the original password. Login is rate-limited and sensitive controls ask for the password again.
 
-### What happens inside:
-It listens for data on port `8080`. When it see a request (like `facebook.com`), it asks `rules.py` for permission. If permission is denied, it sends back a "Forbidden" message to the browser.
+**How does immediate notification work?**
+The application sends JSON to a configured HTTPS URL, optionally with a bearer secret. Block events are sent asynchronously; shutdown-related events are sent synchronously so they are not lost when a process exits.
 
-### How it connects to others:
-It asks `rules.py` for the blocking decision and is controlled by `controller.py`.
+**Can the application guarantee that an administrator cannot uninstall it?**
+No local application can defeat a determined Windows administrator. The guard prevents ordinary removal and creates an alert, while organizational deployments should also use device-management policy and off-device monitoring.
 
----
-
-## 📁 auth.py
-### What it does:
-This file handles **Security and Access**. It manages the session and login process for the parent dashboard.
-
-### Why we need it:
-It ensures that only the parent (who knows the password) can access the settings. It prevents the child from opening the dashboard and deleting the rules.
-
-### What happens inside:
-It checks the password provided in the login form against the hashed password stored in the database.
-
-### How it connects to others:
-It is used by `app.py` to protect the dashboard routes and talks to `database.py` to verify passwords.
-
----
-
-## 🔁 How Everything Works Together (The Full Flow)
-
-1.  **Setup**: You run `main.py`, which starts the **Web Dashboard** and the **Blocking Engine**.
-2.  **Configuration**: The Parent logs into the dashboard (`auth.py`) and adds a site like `facebook.com`.
-3.  **Storage**: `app.py` sends that domain to `database.py`, which cleans it and saves it permanently.
-4.  **Enforcement**: The system immediately calls `blocker.py` to update the Windows `hosts` file and notifies the `proxy.py` to start watching for that site.
-5.  **Interception**: When someone tries to visit Facebook, the **Proxy** catches the request and asks **Rules.py**: *"Is this allowed?"*
-6.  **Blocking**: `rules.py` sees the block rule in the database and tells the Proxy to stop. The browser shows a "Blocked" message.
-7.  **Anti-Bypass**: Every minute, `controller.py` checks that the rules are still in place, just in case someone tried to delete them.
+**How is this useful in a college lab?**
+The same policy engine can limit gaming, social media, downloads, or non-course websites; whitelist mode can restrict exam computers to approved resources; and computer-name alerts identify the workstation involved.

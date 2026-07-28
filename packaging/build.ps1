@@ -4,6 +4,7 @@ $Root = Split-Path -Parent $PSScriptRoot
 Set-Location $Root
 python -m PyInstaller --noconfirm --clean packaging\ChildSafeService.spec
 python -m PyInstaller --noconfirm --clean packaging\ChildSafe.spec
+python -m PyInstaller --noconfirm --clean packaging\ChildSafeUninstallGuard.spec
 if (-not $SkipInstaller) {
     $Compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue
     if (-not $Compiler) {

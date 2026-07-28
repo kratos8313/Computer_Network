@@ -6,31 +6,41 @@ from core.proxy import start_proxy, stop_proxy
 _state_lock = threading.Lock()
 _stop_event = threading.Event()
 _proxy_thread = None
+_enforcement_thread = None
 _proxy_manager = None
 running = False
 
 
+def is_protection_running():
+    with _state_lock:
+        return running
+
+
 def stop_system():
-    global running, _proxy_thread, _proxy_manager
+    global running, _proxy_thread, _enforcement_thread, _proxy_manager
     with _state_lock:
         running = False
         _stop_event.set()
         stop_proxy()
         manager = _proxy_manager
         _proxy_manager = None
-        thread = _proxy_thread
+        proxy_thread = _proxy_thread
+        enforcement_thread = _enforcement_thread
         _proxy_thread = None
+        _enforcement_thread = None
+    if enforcement_thread and enforcement_thread.is_alive():
+        enforcement_thread.join(timeout=3)
+    if proxy_thread and proxy_thread.is_alive():
+        proxy_thread.join(timeout=2)
     if manager:
         manager.disable_proxy()
     from core.blocker import unblock_all
     unblock_all()
-    if thread and thread.is_alive():
-        thread.join(timeout=2)
     print('System stopped')
 
 
 def start_system(startup_timeout=5, proxy_manager=None):
-    global running, _proxy_thread, _proxy_manager
+    global running, _proxy_thread, _enforcement_thread, _proxy_manager
     if proxy_manager is None:
         from core import system_proxy as proxy_manager
     with _state_lock:
@@ -63,6 +73,7 @@ def start_system(startup_timeout=5, proxy_manager=None):
                     block_sites()
                     next_hosts_sync = now + 60
                 _stop_event.wait(2)
-        threading.Thread(target=enforcement_loop, daemon=True).start()
+        _enforcement_thread = threading.Thread(target=enforcement_loop, daemon=True)
+        _enforcement_thread.start()
     print('System started')
     return True
