@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 os.environ.setdefault('PARENTAL_CONTROL_SECRET', 'test-secret-key-that-is-long-enough-123456')
 
 import app as webapp
+import desktop
 from core import controller, database, machine_proxy
 
 
@@ -59,6 +60,13 @@ class MachineProxyWatchdogTests(unittest.TestCase):
             enable.assert_not_called()
 
 
+class DesktopRecoveryTests(unittest.TestCase):
+    def test_repair_requests_an_elevated_automatic_install(self):
+        with mock.patch.object(desktop, 'run_elevated_service', return_value=True) as run:
+            self.assertTrue(desktop.request_service_install())
+        run.assert_called_once_with('install --startup auto')
+
+
 class ControllerLifecycleTests(unittest.TestCase):
     def test_service_manager_is_enabled_watched_and_restored(self):
         ensured = threading.Event()
@@ -80,13 +88,14 @@ class ControllerLifecycleTests(unittest.TestCase):
             ready.set()
             controller._stop_event.wait(2)
 
-        with mock.patch.object(controller, 'start_proxy', side_effect=fake_proxy), mock.patch.object(controller, 'stop_proxy'), mock.patch('core.blocker.block_sites'):
+        with mock.patch.object(controller, 'start_proxy', side_effect=fake_proxy), mock.patch.object(controller, 'stop_proxy'), mock.patch('core.blocker.block_sites'), mock.patch('core.blocker.unblock_all') as unblock:
             controller.start_system(proxy_manager=manager)
             self.assertTrue(ensured.wait(1))
             controller.stop_system()
 
         self.assertTrue(manager.enabled)
         self.assertTrue(manager.disabled)
+        unblock.assert_called_once_with()
 
 
 if __name__ == '__main__':

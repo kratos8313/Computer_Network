@@ -22,6 +22,8 @@ def stop_system():
         _proxy_thread = None
     if manager:
         manager.disable_proxy()
+    from core.blocker import unblock_all
+    unblock_all()
     if thread and thread.is_alive():
         thread.join(timeout=2)
     print('System stopped')
