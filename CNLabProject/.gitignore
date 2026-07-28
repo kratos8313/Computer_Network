@@ -7,3 +7,7 @@ config/flask_secret.key
 config/*.bak
 .DS_Store
 .venv/
+build/
+dist/
+installer-output/
+*.spec.bak
