@@ -12,12 +12,6 @@ import win32serviceutil
 from werkzeug.serving import make_server
 
 from core.paths import ensure_data_dir
-ensure_data_dir(restrict=True)
-
-from app import app
-from core import machine_proxy
-from core.controller import start_system, stop_system
-from core.database import init_db
 
 SERVICE_NAME = 'ChildSafeService'
 
@@ -33,6 +27,8 @@ class ChildSafeService(win32serviceutil.ServiceFramework):
         self.http_server = None
 
     def SvcStop(self):
+        from core.controller import stop_system
+
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         if self.http_server:
             self.http_server.shutdown()
@@ -40,8 +36,15 @@ class ChildSafeService(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.stop_event)
 
     def SvcDoRun(self):
+        stop_callback = None
         servicemanager.LogInfoMsg('ChildSafe service starting')
         try:
+            from app import app
+            from core import machine_proxy
+            from core.controller import start_system, stop_system
+            from core.database import init_db
+
+            stop_callback = stop_system
             ensure_data_dir(restrict=True)
             init_db()
             start_system(proxy_manager=machine_proxy)
@@ -52,14 +55,26 @@ class ChildSafeService(win32serviceutil.ServiceFramework):
             servicemanager.LogErrorMsg(f'ChildSafe service failed: {exc}')
             raise
         finally:
-            try:
-                stop_system()
-            except Exception as exc:
-                servicemanager.LogErrorMsg(f'ChildSafe cleanup failed: {exc}')
+            if stop_callback:
+                try:
+                    stop_callback()
+                except Exception as exc:
+                    servicemanager.LogErrorMsg(f'ChildSafe cleanup failed: {exc}')
             servicemanager.LogInfoMsg('ChildSafe service stopped')
 
 
+def cleanup_policy():
+    from core import machine_proxy
+    from core.blocker import unblock_all
+
+    unblock_all()
+    machine_proxy.disable_proxy()
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1].lower() == 'cleanup':
+        cleanup_policy()
+        return
     if len(sys.argv) == 1:
         servicemanager.Initialize()
         servicemanager.PrepareToHostSingle(ChildSafeService)

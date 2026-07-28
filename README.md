@@ -22,7 +22,7 @@ Build or obtain `ChildSafe-Setup.exe`, run it as an administrator, and complete 
 3. Configures service recovery after unexpected failures.
 4. Opens the parent application for first-time password setup.
 
-Closing the desktop application does not stop protection. Uninstalling ChildSafe stops the service and restores the proxy configuration that existed before installation.
+Closing the desktop application does not stop protection. Uninstalling ChildSafe stops the service, removes its managed hosts-file rules, and restores the proxy configuration that existed before installation.
 
 ## Run from source for development
 
