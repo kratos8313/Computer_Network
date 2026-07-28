@@ -1,8 +1,5 @@
-"""Compatibility entry point for the former Tkinter interface.
-
-The supported management interface is now the authenticated local web dashboard.
-"""
-from main import main
+"""Compatibility entry point for the ChildSafe desktop application."""
+from desktop import ChildSafeDesktop
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    ChildSafeDesktop().run()

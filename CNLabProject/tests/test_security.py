@@ -80,6 +80,7 @@ class WebSecurityTests(unittest.TestCase):
         database.init_db()
         database.set_password('correct horse')
         webapp.app.config.update(TESTING=True)
+        webapp._login_failures.clear()
         self.client = webapp.app.test_client()
 
     def tearDown(self):
@@ -88,6 +89,13 @@ class WebSecurityTests(unittest.TestCase):
         self.dir_patch.stop()
         self.temp.cleanup()
 
+    def test_login_is_rate_limited(self):
+        with self.client.session_transaction() as session:
+            session['_csrf_token'] = 'login-token'
+        for _ in range(5):
+            self.client.post('/login', data={'password': 'wrong password', '_csrf_token': 'login-token'})
+        response = self.client.post('/login', data={'password': 'wrong password', '_csrf_token': 'login-token'})
+        self.assertEqual(response.status_code, 429)
     def test_templates_render(self):
         self.assertEqual(self.client.get('/login').status_code, 200)
 
