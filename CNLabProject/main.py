@@ -12,7 +12,7 @@ def main():
         configured = conn.execute("SELECT 1 FROM settings WHERE key='password'").fetchone()
     if not configured:
         while True:
-            first = getpass('Set parent password (minimum 8 characters): ')
+            first = getpass('Set administrator password (minimum 8 characters): ')
             second = getpass('Confirm password: ')
             if first != second:
                 print('Passwords do not match.')

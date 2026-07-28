@@ -32,6 +32,16 @@ class PackagingSafetyTests(unittest.TestCase):
         self.assertIn('CloseApplications=no', installer)
         self.assertIn('RestartApplications=no', installer)
 
+    def test_uninstall_requires_the_administrator_guard(self):
+        installer = self.installer_text()
+        build_script = (ROOT / 'packaging' / 'build.ps1').read_text(encoding='utf-8')
+        self.assertIn('ChildSafeUninstallGuard\\*', installer)
+        self.assertIn('function InitializeUninstall', installer)
+        self.assertIn('ChildSafeUninstallGuard.exe', installer)
+        self.assertIn('ChildSafeUninstallGuard.spec', build_script)
+        self.assertTrue((ROOT / 'packaging' / 'ChildSafeUninstallGuard.spec').exists())
+        self.assertTrue((ROOT / 'CNLabProject' / 'uninstall_guard.py').exists())
+
     def test_service_registration_has_no_import_time_app_initialization(self):
         service = (ROOT / 'CNLabProject' / 'service.py').read_text(encoding='utf-8')
         prefix = service.split('class ChildSafeService', 1)[0]

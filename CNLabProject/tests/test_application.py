@@ -11,6 +11,7 @@ os.environ.setdefault('PARENTAL_CONTROL_SECRET', 'test-secret-key-that-is-long-e
 
 import app as webapp
 import desktop
+import uninstall_guard
 from core import controller, database, machine_proxy
 
 
@@ -36,7 +37,7 @@ class InitialSetupTests(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.location.endswith('/setup'))
 
-    def test_parent_can_complete_setup_without_terminal(self):
+    def test_administrator_can_complete_setup_without_terminal(self):
         with self.client.session_transaction() as session:
             session['_csrf_token'] = 'setup-token'
         response = self.client.post('/setup', data={
@@ -65,6 +66,22 @@ class DesktopRecoveryTests(unittest.TestCase):
         with mock.patch.object(desktop, 'run_elevated_service', return_value=True) as run:
             self.assertTrue(desktop.request_service_install())
         run.assert_called_once_with('--startup auto install')
+
+
+class UninstallGuardTests(unittest.TestCase):
+    def test_administrator_password_authorizes_uninstall(self):
+        with mock.patch.object(uninstall_guard, 'password_configured', return_value=True), mock.patch.object(uninstall_guard, 'check_password', return_value=True), mock.patch.object(uninstall_guard, 'log') as log, mock.patch.object(uninstall_guard, 'log_activity') as activity, mock.patch.object(uninstall_guard, 'send_notification') as notify:
+            self.assertTrue(uninstall_guard.authorize('correct horse'))
+        log.assert_called_once_with('[SECURITY] Administrator-authorized uninstall.')
+        activity.assert_called_once_with('', 'authorized', 'Administrator-authorized uninstall')
+        notify.assert_called_once_with('uninstall_authorized', 'An administrator authorized application removal.', 'critical')
+
+    def test_invalid_password_blocks_and_logs_uninstall(self):
+        with mock.patch.object(uninstall_guard, 'password_configured', return_value=True), mock.patch.object(uninstall_guard, 'check_password', return_value=False), mock.patch.object(uninstall_guard, 'log') as log, mock.patch.object(uninstall_guard, 'log_activity') as activity, mock.patch.object(uninstall_guard, 'send_notification') as notify:
+            self.assertFalse(uninstall_guard.authorize('wrong password'))
+        log.assert_called_once_with('[SECURITY] Blocked uninstall attempt.')
+        activity.assert_called_once_with('', 'denied', 'Invalid administrator password during uninstall attempt')
+        notify.assert_called_once_with('uninstall_denied', 'An invalid administrator password was entered during an uninstall attempt.', 'critical')
 
 
 class ControllerLifecycleTests(unittest.TestCase):

@@ -3,6 +3,7 @@ import socket
 import threading
 from urllib.parse import urlsplit
 from core.database import log_activity
+from core.notifications import notify_blocked_activity
 from core.rules import should_block
 from utils.logger import log
 
@@ -135,7 +136,8 @@ def handle_client(client_socket, addr):
             blocked, reason = should_block(host)
             if blocked:
                 log_activity(host, 'BLOCKED', reason)
-                _send_error(client_socket, '403 Forbidden', 'Blocked by Parental Control')
+                notify_blocked_activity(host, reason)
+                _send_error(client_socket, '403 Forbidden', 'Blocked by Network Control')
                 return
             remote = _connect_public(host, port, CONNECT_PORTS)
             client_socket.sendall(b'HTTP/1.1 200 Connection Established\r\n\r\n')
@@ -151,7 +153,8 @@ def handle_client(client_socket, addr):
         blocked, reason = should_block(host)
         if blocked:
             log_activity(host, 'BLOCKED', reason)
-            _send_error(client_socket, '403 Forbidden', 'Blocked by Parental Control')
+            notify_blocked_activity(host, reason)
+            _send_error(client_socket, '403 Forbidden', 'Blocked by Network Control')
             return
         path = parsed.path or '/'
         if parsed.query:

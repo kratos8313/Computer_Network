@@ -1,5 +1,5 @@
-#define AppName "ChildSafe Parental Control"
-#define AppVersion "1.0.2"
+#define AppName "ChildSafe Network Control"
+#define AppVersion "1.1.0"
 #define ServiceName "ChildSafeService"
 
 [Setup]
@@ -27,6 +27,7 @@ Name: "{commonappdata}\ChildSafe"; Permissions: admins-full system-full
 Source: "..\dist\ChildSafe\*"; DestDir: "{app}\Desktop"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\dist\ChildSafeService\*"; Excludes: "ChildSafeService.exe"; DestDir: "{app}\Service"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\dist\ChildSafeService\ChildSafeService.exe"; DestDir: "{app}\Service"; Flags: ignoreversion; AfterInstall: InstallService
+Source: "..\dist\ChildSafeUninstallGuard\*"; DestDir: "{app}\Guard"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\ChildSafe"; Filename: "{app}\Desktop\ChildSafe.exe"
@@ -47,6 +48,20 @@ Filename: "{app}\Service\ChildSafeService.exe"; Parameters: "remove"; Flags: run
 Type: filesandordirs; Name: "{app}"
 
 [Code]
+function InitializeUninstall: Boolean;
+var
+  GuardExe: String;
+  ResultCode: Integer;
+begin
+  GuardExe := ExpandConstant('{app}\Guard\ChildSafeUninstallGuard.exe');
+  ResultCode := -1;
+  Result := FileExists(GuardExe) and
+    Exec(GuardExe, '', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode) and
+    (ResultCode = 0);
+  if not Result then
+    MsgBox('ChildSafe uninstall was blocked. An administrator must enter the network control password.',
+      mbError, MB_OK);
+end;
 function ServiceExists: Boolean;
 var
   ResultCode: Integer;
