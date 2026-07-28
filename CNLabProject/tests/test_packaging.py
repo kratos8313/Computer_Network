@@ -20,6 +20,10 @@ class PackagingSafetyTests(unittest.TestCase):
         self.assertIn('procedure ExecRequired', installer)
         self.assertIn('RaiseException(ErrorMessage', installer)
         self.assertIn('if not ServiceExists then', installer)
+        self.assertIn("'--startup auto install'", installer)
+        self.assertIn("'--startup auto update'", installer)
+        self.assertNotIn("'install --startup auto'", installer)
+        self.assertNotIn("'update --startup auto'", installer)
 
     def test_upgrade_stops_service_without_restart_manager(self):
         installer = self.installer_text()

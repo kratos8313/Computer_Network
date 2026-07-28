@@ -58,7 +58,7 @@ def request_service_start():
 
 
 def request_service_install():
-    return run_elevated_service('install --startup auto')
+    return run_elevated_service('--startup auto install')
 
 
 class ChildSafeDesktop:
