@@ -49,7 +49,7 @@ def send_notification(event, message, severity='warning'):
             return False
         secret = get_setting('notification_secret', '')
         payload = json.dumps({
-            'application': 'ChildSafe Network Control',
+            'application': 'NetGuard Access Control',
             'event': event,
             'severity': severity,
             'message': message,
@@ -58,7 +58,7 @@ def send_notification(event, message, severity='warning'):
         }).encode('utf-8')
         headers = {
             'Content-Type': 'application/json',
-            'User-Agent': 'ChildSafe-Network-Control/1.1',
+            'User-Agent': 'NetGuard-Access-Control/1.2',
         }
         if secret:
             headers['Authorization'] = f'Bearer {secret}'
@@ -105,6 +105,6 @@ def notify_async(event, message, severity='warning'):
         target=send_notification,
         args=(event, message, severity),
         daemon=True,
-        name='ChildSafeNotification',
+        name='NetGuardNotification',
     ).start()
     return True

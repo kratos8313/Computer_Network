@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-os.environ.setdefault('PARENTAL_CONTROL_SECRET', 'test-secret-key-that-is-long-enough-123456')
+os.environ.setdefault('NETGUARD_SECRET', 'test-secret-key-that-is-long-enough-123456')
 
 import app as webapp
 import desktop

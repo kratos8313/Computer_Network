@@ -1,11 +1,11 @@
-# Project Report: ChildSafe Network Control
+# Project Report: NetGuard Access Control
 
 **Subject:** Computer Networks / System Programming
 **Focus:** Network traffic interception, policy enforcement, administrator control, and security event notification
 
 ## 1. Project overview
 
-ChildSafe Network Control is a Windows network-access-control application for homes, college computer labs, classrooms, libraries, and other shared or managed computers. An administrator defines website access rules while standard users work without access to the control dashboard or Windows administration tools.
+NetGuard Access Control is a Windows network-access-control application for homes, college computer labs, classrooms, libraries, and other shared or managed computers. An administrator defines website access rules while standard users work without access to the control dashboard or Windows administration tools.
 
 The application supports two common deployments:
 
@@ -56,7 +56,7 @@ Its goals are to enforce acceptable-use policies, record denied activity, repair
 
 Managed users should use standard Windows accounts. Installation, service control, system proxy changes, hosts-file changes, and removal require Windows administrator rights. The dashboard adds a separate application password and requests it again before pause, resume, notification changes, or uninstall.
 
-The local database and logs are stored under `%ProgramData%\ChildSafe`, with access limited to Administrators and SYSTEM by the installer. Passwords use a modern salted password hash. Dashboard forms use CSRF protection, login attempts are rate-limited, and the web server listens only on `127.0.0.1`.
+The local database and logs are stored under `%ProgramData%\NetGuard`, with access limited to Administrators and SYSTEM by the installer. Upgrades preserve an existing legacy data directory. Passwords use a modern salted password hash. Dashboard forms use CSRF protection, login attempts are rate-limited, and the web server listens only on `127.0.0.1`.
 
 A Windows administrator ultimately controls the machine and can bypass any local-only product. Therefore, children and lab users must not possess administrator credentials. Enterprise or campus deployments should additionally use centralized identity, device management, and off-device alert collection.
 

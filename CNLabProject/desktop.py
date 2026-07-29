@@ -11,7 +11,7 @@ from tkinter import messagebox
 import win32service
 import win32serviceutil
 
-SERVICE_NAME = 'ChildSafeService'
+SERVICE_NAME = 'NetGuardService'
 DASHBOARD_URL = 'http://127.0.0.1:5000'
 
 
@@ -39,7 +39,7 @@ def dashboard_status():
 
 
 def service_executable():
-    return Path(sys.executable).resolve().parent.parent / 'Service' / 'ChildSafeService.exe'
+    return Path(sys.executable).resolve().parent.parent / 'Service' / 'NetGuardService.exe'
 
 
 def run_elevated_service(parameters):
@@ -64,18 +64,18 @@ def request_service_install():
     return run_elevated_service('--startup auto install')
 
 
-class ChildSafeDesktop:
+class NetGuardDesktop:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title('ChildSafe Network Control')
+        self.root.title('NetGuard Access Control')
         self.root.geometry('480x330')
         self.root.resizable(False, False)
         self.root.configure(bg='#f8fafc')
         self.repair_attempts = 0
 
-        tk.Label(self.root, text='ChildSafe', font=('Segoe UI', 24, 'bold'), bg='#f8fafc', fg='#0f172a').pack(pady=(34, 4))
+        tk.Label(self.root, text='NetGuard', font=('Segoe UI', 24, 'bold'), bg='#f8fafc', fg='#0f172a').pack(pady=(34, 4))
         tk.Label(self.root, text='Home and Lab Network Control', font=('Segoe UI', 11), bg='#f8fafc', fg='#64748b').pack()
-        self.status = tk.Label(self.root, text='Checking protection…', font=('Segoe UI', 12, 'bold'), bg='#f8fafc')
+        self.status = tk.Label(self.root, text='Checking protection...', font=('Segoe UI', 12, 'bold'), bg='#f8fafc')
         self.status.pack(pady=34)
 
         self.open_button = tk.Button(self.root, width=28, height=2, font=('Segoe UI', 10, 'bold'))
@@ -101,7 +101,7 @@ class ChildSafeDesktop:
             self.status.config(text='Protection is paused by administrator', fg='#a16207')
             self.configure_action('Open Administrator Dashboard', self.open_dashboard)
         elif state in {'RUNNING', 'STARTING'}:
-            self.status.config(text='Protection is starting…', fg='#a16207')
+            self.status.config(text='Protection is starting...', fg='#a16207')
             self.configure_action('Open Administrator Dashboard', self.open_dashboard, enabled=False)
             self.root.after(1500, self.refresh)
         elif state == 'NOT_INSTALLED':
@@ -116,22 +116,22 @@ class ChildSafeDesktop:
 
     def start_service(self):
         if not request_service_start():
-            messagebox.showerror('ChildSafe', 'Windows did not allow the protection service to start.')
+            messagebox.showerror('NetGuard', 'Windows did not allow the protection service to start.')
             return
-        self.status.config(text='Protection is starting…', fg='#a16207')
+        self.status.config(text='Protection is starting...', fg='#a16207')
         self.configure_action('Open Administrator Dashboard', self.open_dashboard, enabled=False)
         self.root.after(1200, self.refresh)
 
     def repair_service(self):
         if not service_executable().exists():
-            messagebox.showerror('ChildSafe', 'The service files are missing. Please reinstall ChildSafe.')
+            messagebox.showerror('NetGuard', 'The service files are missing. Please reinstall NetGuard.')
             return
         if not request_service_install():
-            messagebox.showerror('ChildSafe', 'Windows did not allow the service repair. Please approve the administrator prompt.')
+            messagebox.showerror('NetGuard', 'Windows did not allow the service repair. Please approve the administrator prompt.')
             return
         self.repair_attempts = 0
-        self.status.config(text='Repairing protection service…', fg='#a16207')
-        self.configure_action('Repairing…', self.refresh, enabled=False)
+        self.status.config(text='Repairing...', fg='#a16207')
+        self.configure_action('Repairing...', self.refresh, enabled=False)
         self.root.after(1000, self.finish_repair)
 
     def finish_repair(self):
@@ -145,7 +145,7 @@ class ChildSafeDesktop:
         if self.repair_attempts < 30:
             self.root.after(1000, self.finish_repair)
             return
-        messagebox.showerror('ChildSafe', 'The protection service could not be repaired. Please reinstall ChildSafe.')
+        messagebox.showerror('NetGuard', 'The protection service could not be repaired. Please reinstall NetGuard.')
         self.refresh()
 
     def open_dashboard(self):
@@ -159,4 +159,4 @@ class ChildSafeDesktop:
 
 
 if __name__ == '__main__':
-    ChildSafeDesktop().run()
+    NetGuardDesktop().run()

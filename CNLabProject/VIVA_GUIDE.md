@@ -1,8 +1,8 @@
-# Viva Guide: ChildSafe Network Control
+# Viva Guide: NetGuard Access Control
 
 ## What is the project?
 
-ChildSafe Network Control is a Windows application that enforces website-access policies on a managed computer. It can be used by parents at home or by administrators in college labs, classrooms, libraries, and similar environments.
+NetGuard Access Control is a Windows application that enforces website-access policies on a managed computer. It can be used by parents at home or by administrators in college labs, classrooms, libraries, and similar environments.
 
 ## Why is it a computer-networks project?
 

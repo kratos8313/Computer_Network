@@ -21,11 +21,11 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='ChildSafe',
+    name='NetGuard',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
     console=False,
 )
-coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=True, name='ChildSafe')
+coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=True, name='NetGuard')

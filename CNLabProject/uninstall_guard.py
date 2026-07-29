@@ -1,11 +1,6 @@
-import os
 import sys
 import tkinter as tk
-from pathlib import Path
 from tkinter import messagebox, simpledialog
-
-_data_root = Path(os.environ.get('PROGRAMDATA', r'C:\ProgramData')) / 'ChildSafe'
-os.environ.setdefault('CHILDSAFE_DATA_DIR', str(_data_root))
 
 from core.database import check_password, get_db, log_activity
 from core.notifications import send_notification
@@ -45,14 +40,14 @@ def main():
         root.destroy()
         return 0
     password = simpledialog.askstring(
-        'ChildSafe Uninstall',
+        'NetGuard Uninstall',
         'Enter the administrator password to uninstall this network control application:',
         show='*',
         parent=root,
     )
     if not password or not authorize(password):
         messagebox.showerror(
-            'ChildSafe Uninstall',
+            'NetGuard Uninstall',
             'Uninstall blocked. The administrator password was not accepted.',
             parent=root,
         )
