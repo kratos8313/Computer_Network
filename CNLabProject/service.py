@@ -1,9 +1,4 @@
-import os
 import sys
-from pathlib import Path
-
-_data_root = Path(os.environ.get('PROGRAMDATA', r'C:\ProgramData')) / 'ChildSafe'
-os.environ.setdefault('CHILDSAFE_DATA_DIR', str(_data_root))
 
 import servicemanager
 import win32event
@@ -13,12 +8,12 @@ from werkzeug.serving import make_server
 
 from core.paths import ensure_data_dir
 
-SERVICE_NAME = 'ChildSafeService'
+SERVICE_NAME = 'NetGuardService'
 
 
-class ChildSafeService(win32serviceutil.ServiceFramework):
+class NetGuardService(win32serviceutil.ServiceFramework):
     _svc_name_ = SERVICE_NAME
-    _svc_display_name_ = 'ChildSafe Network Control'
+    _svc_display_name_ = 'NetGuard Access Control'
     _svc_description_ = 'Enforces administrator-defined network rules and hosts the local control dashboard.'
 
     def __init__(self, args):
@@ -43,7 +38,7 @@ class ChildSafeService(win32serviceutil.ServiceFramework):
 
     def SvcDoRun(self):
         stop_callback = None
-        servicemanager.LogInfoMsg('ChildSafe service starting')
+        servicemanager.LogInfoMsg('NetGuard service starting')
         try:
             from app import app
             from core import machine_proxy
@@ -55,18 +50,18 @@ class ChildSafeService(win32serviceutil.ServiceFramework):
             init_db()
             start_system(proxy_manager=machine_proxy)
             self.http_server = make_server('127.0.0.1', 5000, app, threaded=True)
-            servicemanager.LogInfoMsg('ChildSafe dashboard listening on 127.0.0.1:5000')
+            servicemanager.LogInfoMsg('NetGuard dashboard listening on 127.0.0.1:5000')
             self.http_server.serve_forever()
         except Exception as exc:
-            servicemanager.LogErrorMsg(f'ChildSafe service failed: {exc}')
+            servicemanager.LogErrorMsg(f'NetGuard service failed: {exc}')
             raise
         finally:
             if stop_callback:
                 try:
                     stop_callback()
                 except Exception as exc:
-                    servicemanager.LogErrorMsg(f'ChildSafe cleanup failed: {exc}')
-            servicemanager.LogInfoMsg('ChildSafe service stopped')
+                    servicemanager.LogErrorMsg(f'NetGuard cleanup failed: {exc}')
+            servicemanager.LogInfoMsg('NetGuard service stopped')
 
 
 def cleanup_policy():
@@ -83,10 +78,10 @@ def main():
         return
     if len(sys.argv) == 1:
         servicemanager.Initialize()
-        servicemanager.PrepareToHostSingle(ChildSafeService)
+        servicemanager.PrepareToHostSingle(NetGuardService)
         servicemanager.StartServiceCtrlDispatcher()
     else:
-        win32serviceutil.HandleCommandLine(ChildSafeService)
+        win32serviceutil.HandleCommandLine(NetGuardService)
 
 
 if __name__ == '__main__':

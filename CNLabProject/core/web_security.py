@@ -5,10 +5,10 @@ from core.paths import CONFIG_DIR, SECRET_KEY_PATH
 
 
 def load_or_create_secret():
-    configured = os.environ.get('PARENTAL_CONTROL_SECRET')
+    configured = os.environ.get('NETGUARD_SECRET') or os.environ.get('PARENTAL_CONTROL_SECRET')
     if configured:
         if len(configured) < 32:
-            raise RuntimeError('PARENTAL_CONTROL_SECRET must be at least 32 characters')
+            raise RuntimeError('NETGUARD_SECRET must be at least 32 characters')
         return configured
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     try:

@@ -22,9 +22,9 @@ jobs:
         run: choco install innosetup --no-progress -y
       - name: Build installer
         shell: powershell
-        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" packaging\ChildSafe.iss'
+        run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" packaging\NetGuard.iss'
       - uses: actions/upload-artifact@v4
         with:
-          name: ChildSafe-Windows-Installer
-          path: installer-output/ChildSafe-Setup.exe
+          name: NetGuard-Windows-Installer
+          path: installer-output/NetGuard-Setup.exe
           if-no-files-found: error

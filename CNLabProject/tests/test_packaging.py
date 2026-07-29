@@ -7,8 +7,25 @@ ROOT = Path(__file__).resolve().parents[2]
 
 class PackagingSafetyTests(unittest.TestCase):
     def installer_text(self):
-        return (ROOT / 'packaging' / 'ChildSafe.iss').read_text(encoding='utf-8')
+        return (ROOT / 'packaging' / 'NetGuard.iss').read_text(encoding='utf-8')
 
+    def test_netguard_brand_is_used_for_build_and_installer(self):
+        installer = self.installer_text()
+        build_script = (ROOT / 'packaging' / 'build.ps1').read_text(encoding='utf-8')
+        workflow = (ROOT / '.github' / 'workflows' / 'build-windows.yml').read_text(encoding='utf-8')
+        self.assertIn('#define AppName "NetGuard Access Control"', installer)
+        self.assertIn('OutputBaseFilename=NetGuard-Setup', installer)
+        self.assertIn('NetGuardService.spec', build_script)
+        self.assertIn('NetGuard-Windows-Installer', workflow)
+        self.assertIn('installer-output/NetGuard-Setup.exe', workflow)
+
+    def test_legacy_service_is_removed_only_after_netguard_starts(self):
+        installer = self.installer_text()
+        self.assertIn('#define LegacyServiceName "ChildSafeService"', installer)
+        self.assertLess(
+            installer.index("ExecRequired(ServiceExe, 'start'"),
+            installer.index("Exec(ExpandConstant('{sys}\\sc.exe'), 'delete {#LegacyServiceName}'"),
+        )
     def test_uninstaller_always_runs_policy_cleanup(self):
         installer = self.installer_text()
         self.assertIn('Parameters: "cleanup"', installer)
@@ -35,16 +52,16 @@ class PackagingSafetyTests(unittest.TestCase):
     def test_uninstall_requires_the_administrator_guard(self):
         installer = self.installer_text()
         build_script = (ROOT / 'packaging' / 'build.ps1').read_text(encoding='utf-8')
-        self.assertIn('ChildSafeUninstallGuard\\*', installer)
+        self.assertIn('NetGuardUninstallGuard\\*', installer)
         self.assertIn('function InitializeUninstall', installer)
-        self.assertIn('ChildSafeUninstallGuard.exe', installer)
-        self.assertIn('ChildSafeUninstallGuard.spec', build_script)
-        self.assertTrue((ROOT / 'packaging' / 'ChildSafeUninstallGuard.spec').exists())
+        self.assertIn('NetGuardUninstallGuard.exe', installer)
+        self.assertIn('NetGuardUninstallGuard.spec', build_script)
+        self.assertTrue((ROOT / 'packaging' / 'NetGuardUninstallGuard.spec').exists())
         self.assertTrue((ROOT / 'CNLabProject' / 'uninstall_guard.py').exists())
 
     def test_service_registration_has_no_import_time_app_initialization(self):
         service = (ROOT / 'CNLabProject' / 'service.py').read_text(encoding='utf-8')
-        prefix = service.split('class ChildSafeService', 1)[0]
+        prefix = service.split('class NetGuardService', 1)[0]
         runtime_prefix = service.split('def SvcDoRun', 1)[0]
         self.assertNotIn('ensure_data_dir(restrict=True)', prefix)
         self.assertNotIn('from app import app', runtime_prefix)

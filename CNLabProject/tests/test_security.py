@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from core import blocker, database, notifications, proxy
 import os
-os.environ.setdefault('PARENTAL_CONTROL_SECRET', 'test-secret-key-that-is-long-enough-123456')
+os.environ.setdefault('NETGUARD_SECRET', 'test-secret-key-that-is-long-enough-123456')
 import app as webapp
 
 
@@ -62,6 +62,18 @@ class HostsContentTests(unittest.TestCase):
         self.assertIn('127.0.0.1 example.com\n', result)
         self.assertIn('::1 example.com\n', result)
 
+    def test_legacy_hosts_block_is_migrated_to_netguard_markers(self):
+        original = [
+            '127.0.0.1 localhost\n',
+            blocker.LEGACY_MARKER_START,
+            '127.0.0.1 old.example\n',
+            blocker.LEGACY_MARKER_END,
+        ]
+        result = blocker.managed_content(original, ['new.example'])
+        self.assertNotIn(blocker.LEGACY_MARKER_START, result)
+        self.assertNotIn(blocker.LEGACY_MARKER_END, result)
+        self.assertIn(blocker.MARKER_START, result)
+        self.assertIn('127.0.0.1 new.example\n', result)
     def test_malformed_markers_are_rejected(self):
         with self.assertRaises(ValueError):
             blocker.managed_content([blocker.MARKER_START], [])
