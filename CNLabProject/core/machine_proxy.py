@@ -1,13 +1,16 @@
 import ctypes
 import json
+import os
 import threading
 import winreg
+from pathlib import Path
 
 from core.paths import PROXY_BACKUP_PATH, ensure_data_dir
 
 POLICY_PATH = r'Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings'
 INTERNET_SETTINGS = r'Software\Microsoft\Windows\CurrentVersion\Internet Settings'
 _lock = threading.Lock()
+MANAGED_PROXY = '127.0.0.1:8080'
 
 
 def _notify_windows():
@@ -42,7 +45,8 @@ def _restore(root, path, name, state):
 
 
 def _backup_once():
-    if PROXY_BACKUP_PATH.exists():
+    _, existing_state = _load_backup()
+    if existing_state:
         return
     ensure_data_dir()
     state = {
@@ -55,7 +59,7 @@ def _backup_once():
     temporary.replace(PROXY_BACKUP_PATH)
 
 
-def enable_proxy(server='127.0.0.1:8080'):
+def enable_proxy(server=MANAGED_PROXY):
     with _lock:
         _backup_once()
         _write(winreg.HKEY_LOCAL_MACHINE, POLICY_PATH, 'ProxySettingsPerUser', 0, winreg.REG_DWORD)
@@ -64,7 +68,7 @@ def enable_proxy(server='127.0.0.1:8080'):
         _notify_windows()
 
 
-def is_proxy_enforced(server='127.0.0.1:8080'):
+def is_proxy_enforced(server=MANAGED_PROXY):
     return (
         _read(winreg.HKEY_LOCAL_MACHINE, POLICY_PATH, 'ProxySettingsPerUser')['value'] == 0
         and _read(winreg.HKEY_LOCAL_MACHINE, INTERNET_SETTINGS, 'ProxyEnable')['value'] == 1
@@ -72,20 +76,87 @@ def is_proxy_enforced(server='127.0.0.1:8080'):
     )
 
 
-def ensure_proxy(server='127.0.0.1:8080'):
+def ensure_proxy(server=MANAGED_PROXY):
     if not is_proxy_enforced(server):
         enable_proxy(server)
         return True
     return False
 
 
+def _backup_candidates():
+    program_data = Path(os.environ.get('PROGRAMDATA', r'C:\ProgramData'))
+    candidates = [
+        PROXY_BACKUP_PATH,
+        program_data / 'NetGuard' / 'proxy_backup.json',
+        program_data / 'ChildSafe' / 'proxy_backup.json',
+    ]
+    return list(dict.fromkeys(candidates))
+
+
+def _load_backup():
+    for path in _backup_candidates():
+        try:
+            state = json.loads(path.read_text(encoding='utf-8'))
+            records = [state.get(key) for key in ('per_user', 'enabled', 'server')]
+            if all(
+                isinstance(record, dict)
+                and isinstance(record.get('exists'), bool)
+                and (not record['exists'] or record.get('kind') is not None)
+                for record in records
+            ):
+                return path, state
+        except (FileNotFoundError, OSError, ValueError, TypeError):
+            continue
+    return None, None
+
+
+def _is_managed_proxy_active():
+    enabled = _read(winreg.HKEY_LOCAL_MACHINE, INTERNET_SETTINGS, 'ProxyEnable')
+    server = _read(winreg.HKEY_LOCAL_MACHINE, INTERNET_SETTINGS, 'ProxyServer')
+    return enabled['value'] == 1 and str(server['value']).strip().lower() == MANAGED_PROXY
+
+
+def _emergency_disable_managed_proxy():
+    if not _is_managed_proxy_active():
+        return False
+    _restore(
+        winreg.HKEY_LOCAL_MACHINE,
+        INTERNET_SETTINGS,
+        'ProxyEnable',
+        {'exists': True, 'value': 0, 'kind': winreg.REG_DWORD},
+    )
+    _restore(
+        winreg.HKEY_LOCAL_MACHINE,
+        INTERNET_SETTINGS,
+        'ProxyServer',
+        {'exists': False, 'value': None, 'kind': None},
+    )
+    policy = _read(winreg.HKEY_LOCAL_MACHINE, POLICY_PATH, 'ProxySettingsPerUser')
+    if policy['value'] == 0:
+        _restore(
+            winreg.HKEY_LOCAL_MACHINE,
+            POLICY_PATH,
+            'ProxySettingsPerUser',
+            {'exists': False, 'value': None, 'kind': None},
+        )
+    return True
+
+
 def disable_proxy():
     with _lock:
-        if not PROXY_BACKUP_PATH.exists():
-            return
-        state = json.loads(PROXY_BACKUP_PATH.read_text(encoding='utf-8'))
-        _restore(winreg.HKEY_LOCAL_MACHINE, POLICY_PATH, 'ProxySettingsPerUser', state['per_user'])
-        _restore(winreg.HKEY_LOCAL_MACHINE, INTERNET_SETTINGS, 'ProxyEnable', state['enabled'])
-        _restore(winreg.HKEY_LOCAL_MACHINE, INTERNET_SETTINGS, 'ProxyServer', state['server'])
-        PROXY_BACKUP_PATH.unlink(missing_ok=True)
-        _notify_windows()
+        backup_path, state = _load_backup()
+        if state:
+            _restore(winreg.HKEY_LOCAL_MACHINE, POLICY_PATH, 'ProxySettingsPerUser', state['per_user'])
+            _restore(winreg.HKEY_LOCAL_MACHINE, INTERNET_SETTINGS, 'ProxyEnable', state['enabled'])
+            _restore(winreg.HKEY_LOCAL_MACHINE, INTERNET_SETTINGS, 'ProxyServer', state['server'])
+            for path in _backup_candidates():
+                try:
+                    path.unlink(missing_ok=True)
+                except OSError:
+                    pass
+            _notify_windows()
+            return True
+        if _emergency_disable_managed_proxy():
+            _notify_windows()
+            return True
+        return False

@@ -26,14 +26,14 @@ class NetGuardService(win32serviceutil.ServiceFramework):
         from core.notifications import send_notification
 
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+        if self.http_server:
+            self.http_server.shutdown()
+        stop_system()
         send_notification(
             'service_stop_requested',
             'The network protection service received a stop request.',
             'critical',
         )
-        if self.http_server:
-            self.http_server.shutdown()
-        stop_system()
         win32event.SetEvent(self.stop_event)
 
     def SvcDoRun(self):

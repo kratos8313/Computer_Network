@@ -22,14 +22,24 @@ class PackagingSafetyTests(unittest.TestCase):
     def test_legacy_service_is_removed_only_after_netguard_starts(self):
         installer = self.installer_text()
         self.assertIn('#define LegacyServiceName "ChildSafeService"', installer)
+        install_service = installer.split('procedure InstallService;', 1)[1]
         self.assertLess(
-            installer.index("ExecRequired(ServiceExe, 'start'"),
-            installer.index("Exec(ExpandConstant('{sys}\\sc.exe'), 'delete {#LegacyServiceName}'"),
+            install_service.index("ExecRequired(ServiceExe, 'start'"),
+            install_service.index("Exec(ExpandConstant('{sys}\\sc.exe'), 'delete {#LegacyServiceName}'"),
         )
     def test_uninstaller_always_runs_policy_cleanup(self):
         installer = self.installer_text()
         self.assertIn('Parameters: "cleanup"', installer)
         self.assertIn('RunOnceId: "CleanupPolicy"', installer)
+        self.assertIn('procedure EmergencyDisableManagedProxy', installer)
+        self.assertIn("CompareText(Trim(ProxyServer), '127.0.0.1:8080')", installer)
+        self.assertIn('CurUninstallStep = usPostUninstall', installer)
+        self.assertIn("'stop {#ServiceName}'", installer)
+        self.assertIn("'delete {#ServiceName}'", installer)
+        self.assertLess(
+            installer.index('CurUninstallStep = usUninstall'),
+            installer.rindex('EmergencyDisableManagedProxy;'),
+        )
 
     def test_service_registration_fails_setup_cleanly(self):
         installer = self.installer_text()
@@ -66,6 +76,11 @@ class PackagingSafetyTests(unittest.TestCase):
         self.assertNotIn('ensure_data_dir(restrict=True)', prefix)
         self.assertNotIn('from app import app', runtime_prefix)
         self.assertIn("sys.argv[1].lower() == 'cleanup'", service)
+
+    def test_service_restores_network_before_sending_stop_notification(self):
+        service = (ROOT / 'CNLabProject' / 'service.py').read_text(encoding='utf-8')
+        stop_handler = service.split('def SvcStop', 1)[1].split('def SvcDoRun', 1)[0]
+        self.assertLess(stop_handler.index('stop_system()'), stop_handler.index('send_notification('))
 
 
 if __name__ == '__main__':

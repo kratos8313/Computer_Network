@@ -1,4 +1,5 @@
 import os
+import json
 import sys
 import tempfile
 import threading
@@ -59,6 +60,39 @@ class MachineProxyWatchdogTests(unittest.TestCase):
         with mock.patch.object(machine_proxy, 'is_proxy_enforced', return_value=True), mock.patch.object(machine_proxy, 'enable_proxy') as enable:
             self.assertFalse(machine_proxy.ensure_proxy())
             enable.assert_not_called()
+
+    def test_cleanup_falls_back_only_for_netguard_proxy(self):
+        with mock.patch.object(machine_proxy, '_load_backup', return_value=(None, None)), \
+                mock.patch.object(machine_proxy, '_emergency_disable_managed_proxy', return_value=True) as disable, \
+                mock.patch.object(machine_proxy, '_notify_windows') as notify:
+            self.assertTrue(machine_proxy.disable_proxy())
+        disable.assert_called_once_with()
+        notify.assert_called_once_with()
+
+    def test_cleanup_does_not_change_unrelated_proxy_without_backup(self):
+        with mock.patch.object(machine_proxy, '_load_backup', return_value=(None, None)), \
+                mock.patch.object(machine_proxy, '_emergency_disable_managed_proxy', return_value=False) as disable, \
+                mock.patch.object(machine_proxy, '_notify_windows') as notify:
+            self.assertFalse(machine_proxy.disable_proxy())
+        disable.assert_called_once_with()
+        notify.assert_not_called()
+
+    def test_cleanup_finds_backup_in_legacy_data_directory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            legacy_backup = root / 'ChildSafe' / 'proxy_backup.json'
+            legacy_backup.parent.mkdir()
+            state = {
+                'per_user': {'exists': False, 'value': None, 'kind': None},
+                'enabled': {'exists': True, 'value': 0, 'kind': 4},
+                'server': {'exists': False, 'value': None, 'kind': None},
+            }
+            legacy_backup.write_text(json.dumps(state), encoding='utf-8')
+            with mock.patch.dict(os.environ, {'PROGRAMDATA': str(root)}), \
+                    mock.patch.object(machine_proxy, 'PROXY_BACKUP_PATH', root / 'NetGuard' / 'proxy_backup.json'):
+                path, loaded = machine_proxy._load_backup()
+        self.assertEqual(path, legacy_backup)
+        self.assertEqual(loaded, state)
 
 
 class DesktopRecoveryTests(unittest.TestCase):

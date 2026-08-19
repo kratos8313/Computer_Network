@@ -1,5 +1,5 @@
 #define AppName "NetGuard Access Control"
-#define AppVersion "1.2.0"
+#define AppVersion "1.2.1"
 #define ServiceName "NetGuardService"
 #define LegacyServiceName "ChildSafeService"
 
@@ -55,6 +55,15 @@ Type: filesandordirs; Name: "{commonprograms}\ChildSafe"
 Type: filesandordirs; Name: "{app}"
 
 [Code]
+const
+  InternetOptionSettingsChanged = 39;
+  InternetOptionRefresh = 37;
+  InternetSettingsKey = 'Software\Microsoft\Windows\CurrentVersion\Internet Settings';
+  ProxyPolicyKey = 'Software\Policies\Microsoft\Windows\CurrentVersion\Internet Settings';
+
+function InternetSetOption(hInternet, Option, Buffer, BufferLength: LongWord): Boolean;
+  external 'InternetSetOptionW@wininet.dll stdcall';
+
 function InitializeUninstall: Boolean;
 var
   GuardExe: String;
@@ -69,6 +78,54 @@ begin
     MsgBox('NetGuard uninstall was blocked. An administrator must enter the network control password.',
       mbError, MB_OK);
 end;
+
+procedure EmergencyDisableManagedProxy;
+var
+  ProxyEnabled: Cardinal;
+  ProxyServer: String;
+  PerUser: Cardinal;
+begin
+  { The normal cleanup restores the saved pre-install state. This fallback only
+    removes the exact loopback proxy owned by NetGuard if normal cleanup failed. }
+  if RegQueryDWordValue(HKLM64, InternetSettingsKey, 'ProxyEnable', ProxyEnabled) and
+     (ProxyEnabled = 1) and
+     RegQueryStringValue(HKLM64, InternetSettingsKey, 'ProxyServer', ProxyServer) and
+     (CompareText(Trim(ProxyServer), '127.0.0.1:8080') = 0) then
+  begin
+    RegWriteDWordValue(HKLM64, InternetSettingsKey, 'ProxyEnable', 0);
+    RegDeleteValue(HKLM64, InternetSettingsKey, 'ProxyServer');
+    if RegQueryDWordValue(HKLM64, ProxyPolicyKey, 'ProxySettingsPerUser', PerUser) and
+       (PerUser = 0) then
+      RegDeleteValue(HKLM64, ProxyPolicyKey, 'ProxySettingsPerUser');
+    InternetSetOption(0, InternetOptionSettingsChanged, 0, 0);
+    InternetSetOption(0, InternetOptionRefresh, 0, 0);
+  end;
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  ResultCode: Integer;
+begin
+  if CurUninstallStep = usUninstall then
+  begin
+    { Stop both current and legacy services before cleanup touches the proxy. }
+    Exec(ExpandConstant('{sys}\sc.exe'), 'stop {#ServiceName}', '', SW_HIDE,
+      ewWaitUntilTerminated, ResultCode);
+    Exec(ExpandConstant('{sys}\sc.exe'), 'stop {#LegacyServiceName}', '', SW_HIDE,
+      ewWaitUntilTerminated, ResultCode);
+    Sleep(8000);
+  end
+  else if CurUninstallStep = usPostUninstall then
+  begin
+    { Delete registrations even if the bundled service command was unavailable. }
+    Exec(ExpandConstant('{sys}\sc.exe'), 'delete {#ServiceName}', '', SW_HIDE,
+      ewWaitUntilTerminated, ResultCode);
+    Exec(ExpandConstant('{sys}\sc.exe'), 'delete {#LegacyServiceName}', '', SW_HIDE,
+      ewWaitUntilTerminated, ResultCode);
+    EmergencyDisableManagedProxy;
+  end;
+end;
+
 function NamedServiceExists(const Name: String): Boolean;
 var
   ResultCode: Integer;
